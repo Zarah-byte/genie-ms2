@@ -1,60 +1,77 @@
 import Link from "next/link";
-import { BookOpen, Images, Network, Search, Settings, Users } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Plus, Settings, Sparkles, Users } from "lucide-react";
+import { ConstellationBackdrop } from "@/components/constellation/constellation-backdrop";
+import { FamilyLegend } from "@/components/constellation/family-legend";
+import { PrimaryButtonLink } from "@/components/ui/primary-button";
 
 const navItems = [
-  { href: "/archive", label: "Home", icon: BookOpen },
-  { href: "/archive/tree", label: "Tree", icon: Network },
-  { href: "/archive/people", label: "People", icon: Users },
-  { href: "/archive/stories", label: "Stories", icon: Search },
-  { href: "/archive/media", label: "Media", icon: Images },
+  { href: "/archive/people/new", label: "Add Person", icon: Plus },
+  { href: "/archive/stories/new", label: "Add Memory", icon: Sparkles },
+  { href: "/archive/settings", label: "Invite", icon: Users },
   { href: "/archive/settings", label: "Settings", icon: Settings }
 ];
 
 export function ArchiveShell({
   children,
   title,
-  description
+  description,
+  action
 }: {
   children: React.ReactNode;
   title: string;
   description?: string;
+  action?: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#f7f0e4]">
-      <aside className="border-b border-[#dfd0be] bg-[#fffaf1]/80 lg:fixed lg:inset-y-0 lg:left-0 lg:w-64 lg:border-b-0 lg:border-r">
-        <div className="px-5 py-5 sm:px-6">
-          <Link href="/archive" className="font-serif text-3xl font-semibold">
-            Genie
-          </Link>
-          <p className="mt-2 text-sm leading-6 text-[#78695e]">A living room for family memory.</p>
-        </div>
-        <nav className="flex gap-2 overflow-x-auto px-3 pb-4 sm:px-4 lg:grid lg:gap-1 lg:px-3">
+    <div className="relative min-h-screen overflow-hidden bg-[#040406] text-[#f6f0e2]">
+      <ConstellationBackdrop />
+      <header className="safe-px absolute left-0 right-0 top-0 z-30 flex items-center justify-between px-5 py-[max(1rem,var(--safe-top))] sm:px-7">
+        <Link href="/archive" className="font-serif text-3xl text-[#f6f0e2] sm:text-4xl">
+          Genie
+        </Link>
+        <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex min-w-max items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium text-[#4c3a2f] transition hover:bg-[#efe2d0] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8b4a2f]/35 lg:px-3"
-              )}
-            >
-              <item.icon className="size-4 text-[#8b4a2f]" aria-hidden="true" />
+            <PrimaryButtonLink key={item.label} href={item.href} variant="ghost" className="h-10 min-h-10 px-4 text-xs">
+              <item.icon className="size-3.5" aria-hidden="true" />
               {item.label}
-            </Link>
+            </PrimaryButtonLink>
           ))}
         </nav>
+      </header>
+
+      <aside className="safe-px safe-pb absolute bottom-4 left-4 z-20 hidden sm:block">
+        <FamilyLegend />
       </aside>
-      <main className="safe-px safe-pb px-5 py-8 sm:px-6 md:py-10 lg:ml-64 lg:px-10">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-8 md:mb-10">
-            <h1 className="font-serif text-3xl font-semibold tracking-normal text-[#241710] sm:text-4xl md:text-5xl">
-              {title}
-            </h1>
-            {description ? <p className="mt-3 max-w-2xl text-[#78695e]">{description}</p> : null}
+
+      <main className="relative z-20 flex min-h-screen items-start px-3 py-20 sm:px-5 md:px-7">
+        <section className="paper-panel mt-8 w-full max-w-[min(100%,44rem)] p-6 sm:p-7">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-[#3a3029]/70">Private archive</p>
+              <h1 className="mt-2 font-serif text-[clamp(2rem,5vw,3.6rem)] leading-[0.95] text-[#17120f]">
+                {title}
+              </h1>
+            </div>
+            {action}
           </div>
+          {description ? <p className="mt-3 max-w-2xl text-sm leading-6 text-[#3a3029]/78">{description}</p> : null}
+          <div className="archive-divider my-5" />
           {children}
-        </div>
+        </section>
       </main>
+
+      <nav className="safe-px safe-pb fixed bottom-0 left-0 right-0 z-40 grid grid-cols-4 gap-2 border-t border-white/14 bg-black/55 px-3 py-3 backdrop-blur md:hidden">
+        {navItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className="inline-flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-1 text-[0.66rem] text-[#f6f0e2]"
+          >
+            <item.icon className="size-4" aria-hidden="true" />
+            {item.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

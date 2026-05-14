@@ -1,11 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import ReactFlow, { Background, Controls, type Edge, type Node } from "reactflow";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ReactFlow, {
+  Background,
+  Controls,
+  type Edge,
+  type Node,
+  type ReactFlowInstance,
+  type Viewport
+} from "reactflow";
 import "reactflow/dist/style.css";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  buildTranslateExtent,
+  clampViewport,
+  MAP_MAX_SCALE,
+  MAP_MIN_SCALE,
+  resetViewport,
+  type MapBounds,
+  type MapViewport
+} from "@/lib/map/viewport";
 import { mockPeople, mockRelationships, mockStories } from "@/lib/mock-data";
 import { Person } from "@/lib/types";
 
@@ -42,11 +58,34 @@ const positions: Record<string, { x: number; y: number }> = {
   nina: { x: 250, y: 410 }
 };
 
+const TREE_NODE_WIDTH = 176;
+const TREE_NODE_HEIGHT = 92;
+
 export function FamilyTreeDemo({ compact = false }: { compact?: boolean }) {
   const [selectedId, setSelectedId] = useState("alina");
+  const [mapViewport, setMapViewport] = useState<MapViewport>({ x: 0, y: 0, scale: 0.92 });
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const mapViewportRef = useRef<MapViewport>(mapViewport);
+  const flowRef = useRef<ReactFlowInstance<Node, Edge> | null>(null);
+  const flowWrapperRef = useRef<HTMLDivElement | null>(null);
   const selected = mockPeople.find((person) => person.id === selectedId) ?? mockPeople[0];
   const story =
     mockStories.find((item) => item.person_ids?.includes(selected.id)) ?? mockStories[0];
+
+  const contentBounds = useMemo<MapBounds>(() => {
+    const entries = Object.values(positions);
+    const xs = entries.map((item) => item.x);
+    const ys = entries.map((item) => item.y);
+
+    return {
+      minX: Math.min(...xs) - TREE_NODE_WIDTH * 0.25,
+      maxX: Math.max(...xs) + TREE_NODE_WIDTH * 1.25,
+      minY: Math.min(...ys) - TREE_NODE_HEIGHT * 0.4,
+      maxY: Math.max(...ys) + TREE_NODE_HEIGHT * 1.4
+    };
+  }, []);
+
+  const translateExtent = useMemo(() => buildTranslateExtent(contentBounds), [contentBounds]);
 
   const nodes: Node[] = useMemo(
     () =>
@@ -71,24 +110,152 @@ export function FamilyTreeDemo({ compact = false }: { compact?: boolean }) {
     []
   );
 
+  const getClampContext = useCallback(() => {
+    if (!containerSize.width || !containerSize.height) return null;
+    return {
+      viewportWidth: containerSize.width,
+      viewportHeight: containerSize.height,
+      contentBounds
+    };
+  }, [containerSize.height, containerSize.width, contentBounds]);
+
+  const setClampedViewport = useCallback(
+    (nextViewport: MapViewport, duration = 0) => {
+      const context = getClampContext();
+      const clamped = context ? clampViewport(nextViewport, context) : nextViewport;
+      setMapViewport(clamped);
+      mapViewportRef.current = clamped;
+      if (flowRef.current) {
+        void flowRef.current.setViewport(
+          { x: clamped.x, y: clamped.y, zoom: clamped.scale },
+          { duration }
+        );
+      }
+    },
+    [getClampContext]
+  );
+
+  const resetTreeViewport = useCallback(
+    (duration = 260) => {
+      const context = getClampContext();
+      const preset = { x: 0, y: 0, scale: 0.92 };
+      const target = context ? resetViewport(preset, context) : preset;
+      setClampedViewport(target, duration);
+    },
+    [getClampContext, setClampedViewport]
+  );
+
+  useEffect(() => {
+    mapViewportRef.current = mapViewport;
+  }, [mapViewport]);
+
+  useEffect(() => {
+    const wrapper = flowWrapperRef.current;
+    if (!wrapper) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      setContainerSize({
+        width: entry.contentRect.width,
+        height: entry.contentRect.height
+      });
+    });
+
+    observer.observe(wrapper);
+    return () => observer.disconnect();
+  }, []);
+
+  const focusSelectedNode = useCallback(
+    (personId: string) => {
+      if (!containerSize.width || !containerSize.height) return;
+      const position = positions[personId];
+      if (!position) return;
+
+      const currentScale = mapViewportRef.current.scale;
+      const centered: MapViewport = {
+        x: containerSize.width / 2 - (position.x + TREE_NODE_WIDTH / 2) * currentScale,
+        y: containerSize.height / 2 - (position.y + TREE_NODE_HEIGHT / 2) * currentScale,
+        scale: currentScale
+      };
+
+      setClampedViewport(centered, 220);
+    },
+    [containerSize.height, containerSize.width, setClampedViewport]
+  );
+
+  const handleNodeClick = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      setSelectedId(node.id);
+      focusSelectedNode(node.id);
+    },
+    [focusSelectedNode]
+  );
+
+  const handleMove = useCallback(
+    (_event: unknown, viewport: Viewport) => {
+      const context = getClampContext();
+      const nextViewport: MapViewport = {
+        x: viewport.x,
+        y: viewport.y,
+        scale: viewport.zoom
+      };
+      const clamped = context ? clampViewport(nextViewport, context) : nextViewport;
+      setMapViewport(clamped);
+      mapViewportRef.current = clamped;
+
+      if (
+        flowRef.current &&
+        (Math.abs(clamped.x - viewport.x) > 0.5 ||
+          Math.abs(clamped.y - viewport.y) > 0.5 ||
+          Math.abs(clamped.scale - viewport.zoom) > 0.002)
+      ) {
+        void flowRef.current.setViewport(
+          { x: clamped.x, y: clamped.y, zoom: clamped.scale },
+          { duration: 0 }
+        );
+      }
+    },
+    [getClampContext]
+  );
+
+  useEffect(() => {
+    if (!containerSize.width || !containerSize.height) return;
+    resetTreeViewport(0);
+  }, [containerSize.height, containerSize.width, resetTreeViewport]);
+
   return (
     <div className={compact ? "grid gap-5" : "grid gap-6 lg:grid-cols-[1.4fr_0.8fr]"}>
-      <Card className="flow-wrapper h-[520px] overflow-hidden p-2">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          fitView
-          minZoom={0.45}
-          maxZoom={1.4}
-          onNodeClick={(_, node) => setSelectedId(node.id)}
-          nodesDraggable={false}
-          proOptions={{ hideAttribution: true }}
-        >
-          <Background color="#d8c7b4" gap={22} />
-          <Controls showInteractive={false} />
-        </ReactFlow>
-      </Card>
+      <div ref={flowWrapperRef}>
+        <Card className="flow-wrapper relative h-[520px] overflow-hidden p-2">
+          <button
+            type="button"
+            onClick={() => resetTreeViewport()}
+            className="absolute right-5 top-5 z-20 rounded-full border border-[#d8c7b4] bg-[#fffaf1]/95 px-3 py-1.5 text-xs font-semibold text-[#4c3a2f] shadow-sm transition hover:bg-white"
+          >
+            Reset view
+          </button>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            minZoom={MAP_MIN_SCALE}
+            maxZoom={MAP_MAX_SCALE}
+            translateExtent={translateExtent}
+            onMove={handleMove}
+            onNodeClick={handleNodeClick}
+            onInit={(instance) => {
+              flowRef.current = instance;
+              resetTreeViewport(0);
+            }}
+            nodesDraggable={false}
+            proOptions={{ hideAttribution: true }}
+          >
+            <Background color="#d8c7b4" gap={22} />
+            <Controls showInteractive={false} />
+          </ReactFlow>
+        </Card>
+      </div>
       <Card className="p-6">
         <div className="relative mb-5 h-52 overflow-hidden rounded-lg bg-[#eadcc9]">
           {selected.image_url ? (

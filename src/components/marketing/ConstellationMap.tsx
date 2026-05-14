@@ -1,35 +1,32 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft, ArrowRight, Sparkle } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ConstellationCanvas } from "@/components/constellation/constellation-canvas";
 import { DemoLegend } from "@/components/marketing/DemoLegend";
 import { DemoMemoryCard } from "@/components/marketing/DemoMemoryCard";
 import { DemoPersonCard } from "@/components/marketing/DemoPersonCard";
+import { PrimaryButtonLink } from "@/components/ui/primary-button";
+import {
+  clampScale,
+  clampViewport,
+  MAP_WHEEL_ZOOM_SENSITIVITY,
+  resetViewport,
+  type MapBounds,
+  type MapViewport,
+  type ViewportClampContext,
+  zoomAroundPoint
+} from "@/lib/map/viewport";
 import {
   demoMemories,
   demoPeople,
-  demoRelationships,
-  type DemoMemory,
-  type DemoPerson
+  demoRelationships
 } from "@/lib/mock/demoFamily";
 
 type Selection =
-  | { type: "person"; item: DemoPerson }
-  | { type: "memory"; item: DemoMemory }
+  | { type: "person"; id: string }
+  | { type: "memory"; id: string }
   | null;
-
-const nodeColor = {
-  you: "bg-white shadow-[0_0_60px_rgba(255,255,255,0.55),0_0_120px_rgba(255,255,255,0.25)]",
-  first: "bg-[#8587ff] shadow-[0_0_28px_rgba(133,135,255,0.62)]",
-  second: "bg-[#f43ba4] shadow-[0_0_28px_rgba(244,59,164,0.62)]"
-};
-
-function findPerson(id: string) {
-  const person = demoPeople.find((item) => item.id === id);
-  if (!person) throw new Error(`Missing demo person ${id}`);
-  return person;
-}
 
 export function ConstellationMap({
   isExploring,
@@ -41,22 +38,170 @@ export function ConstellationMap({
   onIntro: () => void;
 }) {
   const [selection, setSelection] = useState<Selection>(null);
-  const mapTransformClass = isExploring
-    ? "scale-[1.04] translate-x-0"
-    : "scale-100 translate-x-[8vw] sm:translate-x-[11vw] md:translate-x-[13vw] lg:translate-x-[16vw]";
+  const [viewport, setViewport] = useState<MapViewport>({ x: 0, y: 0, scale: 1 });
+  const viewportRef = useRef<MapViewport>(viewport);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const dragRef = useRef<{ pointerId: number; x: number; y: number } | null>(null);
 
-  const relationshipLines = useMemo(
-    () =>
-      demoRelationships.map((relationship) => {
-        const from = findPerson(relationship.from);
-        const to = findPerson(relationship.to);
-        return { ...relationship, from, to };
-      }),
-    []
+  const pointBounds = useMemo(() => {
+    const points = [...demoPeople, ...demoMemories];
+    const xs = points.map((item) => item.x);
+    const ys = points.map((item) => item.y);
+
+    return {
+      minX: Math.min(...xs),
+      maxX: Math.max(...xs),
+      minY: Math.min(...ys),
+      maxY: Math.max(...ys)
+    };
+  }, []);
+
+  const introViewportForWidth = useCallback((width: number): MapViewport => {
+    if (width >= 1024) return { x: width * 0.16, y: 0, scale: 1 };
+    if (width >= 768) return { x: width * 0.13, y: 0, scale: 1 };
+    if (width >= 640) return { x: width * 0.11, y: 0, scale: 1 };
+    return { x: width * 0.08, y: 0, scale: 1 };
+  }, []);
+
+  const getClampContext = useCallback((): ViewportClampContext | null => {
+    if (!containerSize.width || !containerSize.height) return null;
+
+    const contentBounds: MapBounds = {
+      minX: ((pointBounds.minX - 6) / 100) * containerSize.width,
+      maxX: ((pointBounds.maxX + 6) / 100) * containerSize.width,
+      minY: ((pointBounds.minY - 7) / 100) * containerSize.height,
+      maxY: ((pointBounds.maxY + 7) / 100) * containerSize.height
+    };
+
+    return {
+      viewportWidth: containerSize.width,
+      viewportHeight: containerSize.height,
+      contentBounds
+    };
+  }, [containerSize.height, containerSize.width, pointBounds.maxX, pointBounds.maxY, pointBounds.minX, pointBounds.minY]);
+
+  const clampFromContext = useCallback(
+    (nextViewport: MapViewport) => {
+      const context = getClampContext();
+      if (!context) return nextViewport;
+      return clampViewport(nextViewport, context);
+    },
+    [getClampContext]
   );
 
-  const activePersonId = selection?.type === "person" ? selection.item.id : null;
-  const activeMemoryId = selection?.type === "memory" ? selection.item.id : null;
+  const applyProgrammaticViewport = useCallback(
+    (nextViewport: MapViewport) => {
+      const context = getClampContext();
+      if (!context) {
+        setViewport(nextViewport);
+        return;
+      }
+      setViewport(resetViewport(nextViewport, context));
+    },
+    [getClampContext]
+  );
+
+  useEffect(() => {
+    viewportRef.current = viewport;
+  }, [viewport]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      setContainerSize({
+        width: entry.contentRect.width,
+        height: entry.contentRect.height
+      });
+    });
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!containerSize.width) return;
+
+    const preset = isExploring
+      ? { x: 0, y: 0, scale: 1.04 }
+      : introViewportForWidth(containerSize.width);
+
+    applyProgrammaticViewport(preset);
+  }, [applyProgrammaticViewport, containerSize.width, introViewportForWidth, isExploring]);
+
+  const handleExplore = useCallback(() => {
+    applyProgrammaticViewport({ x: 0, y: 0, scale: 1.04 });
+    onExplore();
+  }, [applyProgrammaticViewport, onExplore]);
+
+  const handleIntro = useCallback(() => {
+    applyProgrammaticViewport(introViewportForWidth(containerSize.width));
+    onIntro();
+  }, [applyProgrammaticViewport, containerSize.width, introViewportForWidth, onIntro]);
+
+  const handlePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }, []);
+
+  const handlePointerMove = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!dragRef.current || dragRef.current.pointerId !== event.pointerId) return;
+      event.preventDefault();
+
+      const dx = event.clientX - dragRef.current.x;
+      const dy = event.clientY - dragRef.current.y;
+      dragRef.current = { ...dragRef.current, x: event.clientX, y: event.clientY };
+
+      setViewport((current) =>
+        clampFromContext({
+          ...current,
+          x: current.x + dx,
+          y: current.y + dy
+        })
+      );
+    },
+    [clampFromContext]
+  );
+
+  const handlePointerUp = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragRef.current || dragRef.current.pointerId !== event.pointerId) return;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    dragRef.current = null;
+  }, []);
+
+  const handleWheel = useCallback(
+    (event: React.WheelEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      const container = containerRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const pointer = {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+
+      const current = viewportRef.current;
+      const nextScale = clampScale(
+        current.scale * Math.exp(-event.deltaY * MAP_WHEEL_ZOOM_SENSITIVITY)
+      );
+      const next = zoomAroundPoint(current, pointer, nextScale);
+      setViewport(clampFromContext(next));
+    },
+    [clampFromContext]
+  );
+
+  const selectedPerson = selection?.type === "person"
+    ? demoPeople.find((item) => item.id === selection.id)
+    : null;
+  const selectedMemory = selection?.type === "memory"
+    ? demoMemories.find((item) => item.id === selection.id)
+    : null;
 
   return (
     <div
@@ -65,73 +210,34 @@ export function ConstellationMap({
       ].join(" ")}
     >
       <div
+        ref={containerRef}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onWheel={handleWheel}
         className={[
-          "absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] motion-reduce:transition-none",
-          mapTransformClass
+          "absolute inset-0 cursor-grab touch-none",
+          dragRef.current ? "cursor-grabbing" : ""
         ].join(" ")}
+        style={{
+          transform: `translate3d(${viewport.x}px, ${viewport.y}px, 0) scale(${viewport.scale})`,
+          transformOrigin: "0 0"
+        }}
       >
-        <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
-          <defs>
-            <radialGradient id="memoryGlow">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-          {relationshipLines.map((line) => (
-            <line
-              key={line.id}
-              x1={`${line.from.x}%`}
-              y1={`${line.from.y}%`}
-              x2={`${line.to.x}%`}
-              y2={`${line.to.y}%`}
-              stroke="rgba(255,255,255,0.38)"
-              strokeWidth="1"
-              strokeDasharray="1 4"
-            />
-          ))}
-          <circle cx="47%" cy="42%" r="12%" fill="url(#memoryGlow)" />
-        </svg>
-
-        {demoPeople.map((person) => {
-          const isActive = activePersonId === person.id;
-          const size = person.color === "you" ? "size-10 md:size-11" : "size-6 md:size-7";
-          return (
-            <button
-              key={person.id}
-              type="button"
-              onClick={() => setSelection({ type: "person", item: person })}
-              className={[
-                "absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full transition duration-300 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-white/70 motion-reduce:transition-none",
-                size,
-                nodeColor[person.color],
-                isActive ? "scale-125 ring-2 ring-white/60" : ""
-              ].join(" ")}
-              style={{ left: `${person.x}%`, top: `${person.y}%` }}
-              aria-label={`Open ${person.name}`}
-            />
-          );
-        })}
-
-        {demoMemories.map((memory) => (
-          <button
-            key={memory.id}
-            type="button"
-            onClick={() => setSelection({ type: "memory", item: memory })}
-            className={[
-              "absolute z-10 inline-flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white transition duration-300 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-white/70 motion-reduce:transition-none md:size-11",
-              activeMemoryId === memory.id ? "scale-125" : ""
-            ].join(" ")}
-            style={{ left: `${memory.x}%`, top: `${memory.y}%` }}
-            aria-label={`Open memory: ${memory.title}`}
-          >
-            <Sparkle className="size-4 fill-white md:size-5" aria-hidden="true" />
-          </button>
-        ))}
+        <ConstellationCanvas
+          people={demoPeople}
+          memories={demoMemories}
+          relationships={demoRelationships}
+          selection={selection}
+          onPersonSelect={(id) => setSelection({ type: "person", id })}
+          onMemorySelect={(id) => setSelection({ type: "memory", id })}
+        />
       </div>
 
       <button
         type="button"
-        onClick={onExplore}
+        onClick={handleExplore}
         className={[
           "absolute bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] right-[max(1rem,env(safe-area-inset-right))] z-20 hidden h-11 items-center gap-3 rounded-full bg-[#f5eedc] px-5 text-sm text-[#111111] shadow-[0_12px_35px_rgba(0,0,0,0.35)] transition hover:scale-[1.03] motion-reduce:transition-none lg:inline-flex",
           isExploring ? "translate-y-16 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"
@@ -146,7 +252,7 @@ export function ConstellationMap({
       {isExploring ? (
         <button
           type="button"
-          onClick={onIntro}
+          onClick={handleIntro}
           className="absolute left-[max(1rem,env(safe-area-inset-left))] top-[max(1rem,env(safe-area-inset-top))] z-30 inline-flex h-10 items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 text-xs font-semibold text-[#f5eedc] backdrop-blur transition hover:bg-white/15 motion-reduce:transition-none"
         >
           <ArrowLeft className="size-3.5" aria-hidden="true" />
@@ -164,19 +270,19 @@ export function ConstellationMap({
         <DemoLegend />
       </div>
 
-      <Link
+      <PrimaryButtonLink
         href="/signup"
+        variant="cream"
         className={[
-          "absolute z-20 inline-flex h-12 items-center justify-center gap-5 rounded-full px-7 text-sm font-semibold shadow-[0_16px_40px_rgba(0,0,0,0.36)] transition hover:scale-[1.03] motion-reduce:transition-none",
+          "absolute z-20 shadow-[0_16px_40px_rgba(0,0,0,0.36)]",
           isExploring
-            ? "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 -translate-x-1/2 bg-[#f5eedc] text-[#111111] md:left-auto md:right-8 md:translate-x-0"
-            : "bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] left-[max(1rem,env(safe-area-inset-left))] bg-[#f5eedc] text-[#111111] lg:hidden"
+            ? "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0"
+            : "bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] left-[max(1rem,env(safe-area-inset-left))] lg:hidden"
         ].join(" ")}
-        style={{ color: "#111111" }}
+        arrow
       >
         Get Started
-        <ArrowRight className="size-4" aria-hidden="true" />
-      </Link>
+      </PrimaryButtonLink>
 
       <div
         className={[
@@ -187,8 +293,8 @@ export function ConstellationMap({
           selection ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
         ].join(" ")}
       >
-        {selection?.type === "person" ? <DemoPersonCard person={selection.item} /> : null}
-        {selection?.type === "memory" ? <DemoMemoryCard memory={selection.item} /> : null}
+        {selectedPerson ? <DemoPersonCard person={selectedPerson} /> : null}
+        {selectedMemory ? <DemoMemoryCard memory={selectedMemory} onClose={() => setSelection(null)} /> : null}
       </div>
     </div>
   );

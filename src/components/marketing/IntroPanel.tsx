@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { PrimaryButton, PrimaryButtonLink } from "@/components/ui/primary-button";
+import { SlidePanel } from "@/components/ui/slide-panel";
 
 const steps = [
   {
@@ -14,18 +14,18 @@ const steps = [
   },
   {
     number: "03.",
-    title: "Attach the memories",
-    body: "Upload photographs, letters, recipes, voice notes, and documents."
+    title: "Attach memories",
+    body: "Upload photographs, letters, documents, recipes, and recordings."
   },
   {
     number: "04.",
     title: "Write the stories",
-    body: "Add the context a birth certificate never could: the language, places, and memories passed down."
+    body: "Add the context a certificate never could: places, language, rituals, and remembered fragments."
   },
   {
     number: "05.",
     title: "Share with family",
-    body: "Invite relatives to view and contribute through a private family PIN."
+    body: "Invite relatives to view, contribute, and preserve what they know."
   }
 ];
 
@@ -37,14 +37,7 @@ export function IntroPanel({
   onExplore: () => void;
 }) {
   return (
-    <aside
-      className={[
-        "absolute inset-y-0 left-0 z-20 flex w-full max-w-[min(100vw,42rem)] flex-col overflow-y-auto bg-[#f5eedc] px-6 py-6 text-[#111111] shadow-[18px_0_50px_rgba(0,0,0,0.26)] transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] motion-reduce:transition-none sm:px-8 sm:py-7 md:max-w-[32rem] md:px-12 lg:w-[41vw] lg:max-w-none lg:px-[8.2vw] lg:py-[5.5vh]",
-        isOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
-      ].join(" ")}
-      aria-hidden={!isOpen}
-      inert={!isOpen}
-    >
+    <SlidePanel isOpen={isOpen}>
       <div className="mx-auto flex w-full max-w-[30rem] grow flex-col lg:max-w-[390px]">
         <div className="text-center">
           <p className="font-serif text-[clamp(2.2rem,7vw,3.6rem)] leading-none">
@@ -80,24 +73,14 @@ export function IntroPanel({
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:mt-7 md:mt-auto md:pt-6">
-          <Link
-            href="/signup"
-            className="inline-flex h-12 min-w-36 items-center justify-center gap-5 rounded-full bg-[#020202] px-6 text-[0.86rem] font-semibold text-[color:#f5eedc] transition hover:scale-[1.02] hover:bg-[#171717] focus:outline-none focus:ring-2 focus:ring-[#020202]/25"
-            style={{ color: "#f5eedc" }}
-          >
+          <PrimaryButtonLink href="/signup" className="min-w-36" arrow>
             Get Started
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-          <button
-            type="button"
-            onClick={onExplore}
-            className="inline-flex h-11 items-center justify-center gap-3 rounded-full border border-[#111111]/15 bg-[#fff9eb] px-5 text-[0.82rem] text-[color:#111111] shadow-sm transition hover:scale-[1.02] hover:border-[#111111]/30 lg:hidden"
-          >
+          </PrimaryButtonLink>
+          <PrimaryButton type="button" onClick={onExplore} variant="cream" className="lg:hidden">
             Explore
-            <span aria-hidden="true">⦿</span>
-          </button>
+          </PrimaryButton>
         </div>
       </div>
-    </aside>
+    </SlidePanel>
   );
 }

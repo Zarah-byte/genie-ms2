@@ -1,15 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f0e4;
-  --foreground: #241710;
-  --muted: #78695e;
-  --card: #fffaf1;
-  --line: #dfd0be;
-  --accent: #8b4a2f;
-  --accent-dark: #5a2e20;
-  --sage: #6f7b62;
-  --gold: #b78645;
+  --background: #040406;
+  --foreground: #f6f0e2;
+  --paper: #f4eede;
+  --paper-ink: #17120f;
+  --muted: #8f877e;
+  --line: rgba(255, 255, 255, 0.14);
+  --dotted-line: rgba(255, 255, 255, 0.28);
+  --node-you: #ffffff;
+  --node-first: #9090ff;
+  --node-second: #f03da9;
+  --memory-star: #f6f2ea;
+  --pill-dark: #23201b;
+  --pill-light: #f6f0e2;
   --font-heading: "Ovo", Georgia, serif;
   --font-body: "Mulish", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --safe-top: env(safe-area-inset-top);
@@ -35,15 +39,13 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(183, 134, 69, 0.12), transparent 34rem),
-    linear-gradient(180deg, #fbf5ea 0%, var(--background) 48%, #efe2d0 100%);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 }
 
 ::selection {
-  background: rgba(139, 74, 47, 0.18);
+  background: rgba(246, 240, 226, 0.24);
 }
 
 a {
@@ -58,13 +60,6 @@ select {
   font: inherit;
 }
 
-.archive-paper {
-  background-image:
-    linear-gradient(rgba(90, 46, 32, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(90, 46, 32, 0.025) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
 .safe-px {
   padding-left: max(1rem, var(--safe-left));
   padding-right: max(1rem, var(--safe-right));
@@ -74,16 +69,51 @@ select {
   padding-bottom: max(1rem, var(--safe-bottom));
 }
 
-.flow-wrapper .react-flow__node {
-  border: 0;
-  background: transparent;
+.celestial-bg {
+  background-color: #040406;
+  background-image:
+    radial-gradient(circle at 54% 42%, rgba(255, 255, 255, 0.2), transparent 18rem),
+    radial-gradient(circle at 24% 30%, rgba(144, 144, 255, 0.1), transparent 22rem),
+    radial-gradient(circle at 74% 72%, rgba(240, 61, 169, 0.08), transparent 22rem);
 }
 
-.flow-wrapper .react-flow__handle {
-  opacity: 0;
+.paper-panel {
+  color: var(--paper-ink);
+  background: var(--paper);
+  border: 1px solid rgba(20, 16, 13, 0.1);
+  border-radius: 0.85rem;
+  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.26);
 }
 
-.flow-wrapper .react-flow__edge-path {
-  stroke: #9b8776;
-  stroke-width: 1.7;
+.archive-divider {
+  border-top: 1px dashed rgba(20, 16, 13, 0.16);
+}
+
+.archive-caption {
+  color: rgba(23, 18, 15, 0.68);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.pill-button {
+  min-height: 2.8rem;
+  border-radius: 999px;
+  padding: 0.5rem 1.45rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.constellation-line {
+  stroke: var(--dotted-line);
+  stroke-width: 1;
+  stroke-dasharray: 1 4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -3,7 +3,9 @@ export type DemoPerson = {
   name: string;
   relationship: string;
   dates: string;
-  excerpt: string;
+  place: string;
+  story: string;
+  memories: string[];
   color: "you" | "first" | "second";
   x: number;
   y: number;
@@ -31,19 +33,28 @@ export const demoPeople: DemoPerson[] = [
     name: "You",
     relationship: "Archive keeper",
     dates: "Living branch",
-    excerpt:
+    place: "Present day",
+    story:
       "The first point of light in this archive: the person gathering names, photographs, and the stories that might otherwise drift away.",
+    memories: ["A first photo upload", "Voice note from family reunion"],
     color: "you",
     x: 47,
     y: 42
   },
   {
-    id: "amira",
-    name: "Amira Yusuf",
+    id: "amina",
+    name: "Amina Rahman",
     relationship: "Grandmother",
-    dates: "1934-2018",
-    excerpt:
-      "She kept recipes in the margins of letters, measuring cardamom by memory and teaching everyone to listen before writing anything down.",
+    dates: "1942-2018",
+    place: "Lahore -> Queens",
+    story:
+      "She carried recipes in memory long before anyone wrote them down.",
+    memories: [
+      "Wedding photograph, 1964",
+      "Voice note from Eid dinner",
+      "Handwritten recipe for cardamom tea",
+      "Migration story"
+    ],
     color: "first",
     x: 66,
     y: 27
@@ -53,8 +64,10 @@ export const demoPeople: DemoPerson[] = [
     name: "Samir Yusuf",
     relationship: "Grandfather",
     dates: "1929-2001",
-    excerpt:
+    place: "Chittagong -> London",
+    story:
       "A railway ticket folded into his passport marked the year the family crossed water and began again in a smaller kitchen.",
+    memories: ["The tea tin with the train ticket"],
     color: "first",
     x: 36,
     y: 74
@@ -64,8 +77,10 @@ export const demoPeople: DemoPerson[] = [
     name: "Leila Rahman",
     relationship: "Aunt",
     dates: "b. 1962",
-    excerpt:
+    place: "Brooklyn",
+    story:
       "Leila remembers the songs, but not the exact street. Her stories hold the map until someone finds the address.",
+    memories: ["Porch photograph, three unknown cousins"],
     color: "second",
     x: 29,
     y: 31
@@ -75,8 +90,10 @@ export const demoPeople: DemoPerson[] = [
     name: "Nora Yusuf",
     relationship: "Mother",
     dates: "b. 1966",
-    excerpt:
+    place: "Queens",
+    story:
       "The shoebox of photographs came from her closet, each envelope labeled with a place, a season, or a question mark.",
+    memories: ["Shoebox photo labels", "First school portrait"],
     color: "second",
     x: 76,
     y: 78
@@ -86,8 +103,10 @@ export const demoPeople: DemoPerson[] = [
     name: "Idris Noor",
     relationship: "Cousin",
     dates: "b. 1989",
-    excerpt:
+    place: "Queens",
+    story:
       "Idris added voice notes from family calls, preserving the pauses and laughter between remembered facts.",
+    memories: ["Voice note after dinner"],
     color: "first",
     x: 84,
     y: 10
@@ -95,11 +114,11 @@ export const demoPeople: DemoPerson[] = [
 ];
 
 export const demoRelationships: DemoRelationship[] = [
-  { id: "r1", from: "you", to: "amira" },
+  { id: "r1", from: "you", to: "amina" },
   { id: "r2", from: "you", to: "samir" },
   { id: "r3", from: "you", to: "leila" },
   { id: "r4", from: "you", to: "nora" },
-  { id: "r5", from: "amira", to: "idris" },
+  { id: "r5", from: "amina", to: "idris" },
   { id: "r6", from: "leila", to: "samir" },
   { id: "r7", from: "samir", to: "nora" },
   { id: "r8", from: "idris", to: "nora" }
@@ -112,7 +131,7 @@ export const demoMemories: DemoMemory[] = [
     dateOrPlace: "Queens, 1984",
     excerpt:
       "A stained recipe card remembers what no one wrote in full: less mustard oil if the mangoes are young.",
-    relatedPeople: ["Amira Yusuf", "Nora Yusuf"],
+    relatedPeople: ["Amina Rahman", "Nora Yusuf"],
     x: 24,
     y: 52
   },
@@ -152,7 +171,7 @@ export const demoMemories: DemoMemory[] = [
     dateOrPlace: "Sylhet, date unknown",
     excerpt:
       "A place remembered by the smell of rain and the turn after the bakery, waiting to become coordinates.",
-    relatedPeople: ["Amira Yusuf", "Samir Yusuf"],
+    relatedPeople: ["Amina Rahman", "Samir Yusuf"],
     x: 92,
     y: 86
   }
