@@ -11,11 +11,11 @@ export function StoryCard({ story }: { story: Story }) {
           {story.image_url ? <Image src={story.image_url} alt="" fill className="object-cover" /> : null}
         </div>
         <div className="p-5">
-          <p className="text-xs uppercase tracking-[0.18em] text-[#3a3029]/70">
+          <p className="type-overline text-[#3a3029]/70">
             {story.date_text || "Date unknown"}
           </p>
-          <h3 className="mt-2 font-serif text-2xl text-[#17120f]">{story.title}</h3>
-          <p className="mt-3 text-sm leading-6 text-[#2e2621]/90">{story.excerpt}</p>
+          <h3 className="type-h3 mt-2">{story.title}</h3>
+          <p className="type-body mt-3 text-[#2e2621]/90">{story.excerpt}</p>
         </div>
       </Card>
     </Link>

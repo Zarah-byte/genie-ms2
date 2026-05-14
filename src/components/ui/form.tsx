@@ -13,10 +13,10 @@ export function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="grid gap-2 text-sm font-medium text-[#241b16]">
+    <label className="type-label grid gap-2 text-[#241b16]">
       <span>{label}</span>
       {children}
-      {hint ? <span className="archive-caption font-normal">{hint}</span> : null}
+      {hint ? <span className="type-caption font-normal">{hint}</span> : null}
     </label>
   );
 }

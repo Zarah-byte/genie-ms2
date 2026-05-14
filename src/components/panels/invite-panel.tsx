@@ -11,10 +11,10 @@ export function InvitePanel({
 }) {
   return (
     <section className="paper-panel p-6 sm:p-7">
-      <h2 className="font-serif text-[clamp(1.7rem,4vw,2.6rem)] leading-none text-[#17120f]">
+      <h2 className="type-h1 leading-none">
         Invite family into the archive.
       </h2>
-      <p className="mt-3 text-sm leading-6 text-[#3a3029]/80">
+      <p className="type-body mt-3 text-[#3a3029]/80">
         Only share this with relatives or trusted contributors. You can reset the PIN anytime.
       </p>
       <div className="my-7 rounded-2xl border border-dashed border-[#17120f]/25 bg-[#f7f1e3] px-5 py-5 font-mono text-3xl tracking-[0.22em] text-[#17120f] sm:text-4xl">

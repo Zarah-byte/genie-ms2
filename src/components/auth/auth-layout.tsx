@@ -25,15 +25,15 @@ export function AuthLayout({
           <Link href="/" className="inline-flex">
             <GenieLogo className="h-11 brightness-0" />
           </Link>
-          <h1 className="mt-6 font-serif text-[clamp(2rem,6vw,3.2rem)] leading-[0.95] text-[#17120f]">
+          <h1 className="type-h1 mt-6">
             {title}
           </h1>
-          <p className="mt-4 text-sm leading-6 text-[#392f28]/80">{description}</p>
-          <p className="mt-3 text-sm leading-6 text-[#392f28]/80">
+          <p className="type-body mt-4 text-[#392f28]/80">{description}</p>
+          <p className="type-body mt-3 text-[#392f28]/80">
             Your archive is private by default. Only people with access can view or contribute.
           </p>
           <div className="mt-7">{children}</div>
-          <div className="mt-6 text-sm text-[#392f28]/80">{footer}</div>
+          <div className="type-body mt-6 text-[#392f28]/80">{footer}</div>
         </div>
       </SlidePanel>
     </main>

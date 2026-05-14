@@ -48,14 +48,14 @@ export function ArchiveShell({
         <section className="paper-panel mt-8 w-full max-w-[min(100%,44rem)] p-6 sm:p-7">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.16em] text-[#3a3029]/70">Private archive</p>
-              <h1 className="mt-2 font-serif text-[clamp(2rem,5vw,3.6rem)] leading-[0.95] text-[#17120f]">
+              <p className="type-overline text-[#3a3029]/70">Private archive</p>
+              <h1 className="type-display mt-2">
                 {title}
               </h1>
             </div>
             {action}
           </div>
-          {description ? <p className="mt-3 max-w-2xl text-sm leading-6 text-[#3a3029]/78">{description}</p> : null}
+          {description ? <p className="type-body mt-3 max-w-2xl text-[#3a3029]/78">{description}</p> : null}
           <div className="archive-divider my-5" />
           {children}
         </section>
@@ -66,7 +66,7 @@ export function ArchiveShell({
           <Link
             key={item.label}
             href={item.href}
-            className="inline-flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-1 text-[0.66rem] text-[#f6f0e2]"
+            className="type-overline inline-flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-1 text-[#f6f0e2]"
           >
             <item.icon className="size-4" aria-hidden="true" />
             {item.label}
