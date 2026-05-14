@@ -24,15 +24,8 @@ function dotToneClass(tone: PersonNodeTone) {
   return "bg-[var(--node-second)] shadow-[0_0_0_1px_rgba(240,61,169,0.55),0_0_18px_rgba(240,61,169,0.45)]";
 }
 
-function expandedRingClass(tone: PersonNodeTone) {
-  if (tone === "you") {
-    return "border-white/95 shadow-[0_0_0_2px_rgba(255,255,255,0.28),0_0_0_10px_rgba(255,255,255,0.08),0_0_34px_rgba(255,255,255,0.48)]";
-  }
-  if (tone === "first") {
-    return "border-[var(--node-first)] shadow-[0_0_0_1px_rgba(165,96,240,0.7),0_0_24px_rgba(165,96,240,0.5)]";
-  }
-  return "border-[var(--node-second)] shadow-[0_0_0_1px_rgba(240,61,169,0.7),0_0_24px_rgba(240,61,169,0.5)]";
-}
+const expandedAvatarRingClass =
+  "border-[5px] border-[var(--node-avatar-ring)] bg-black/35 shadow-[0_0_0_1px_rgba(255,45,184,0.5),0_0_26px_rgba(255,45,184,0.4)]";
 
 export function PersonNode({
   tone,
@@ -70,7 +63,7 @@ export function PersonNode({
           "relative overflow-hidden rounded-full transition-all duration-250 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/85 motion-reduce:transition-none",
           isExpanded ? expandedSizeClass(tone) : collapsedSizeClass(tone),
           isExpanded
-            ? cn("border-[4px] bg-black/35", expandedRingClass(tone))
+            ? expandedAvatarRingClass
             : cn("border border-transparent", dotToneClass(tone)),
           active ? "scale-105" : "",
           className
