@@ -42,7 +42,7 @@ export function IntroPanel({
       <div className="mx-auto flex w-full max-w-[30rem] grow flex-col lg:max-w-[390px]">
         <div className="text-center">
           <GenieLogo className="mx-auto h-[clamp(2.2rem,7vw,3.6rem)] brightness-0" />
-          <p className="mx-auto mt-4 max-w-[28ch] text-pretty text-[0.76rem] leading-[1.4] text-[color:#18130f] sm:mt-5 sm:text-[0.8rem] md:text-[0.84rem]">
+          <p className="type-body-sm mx-auto mt-4 max-w-[28ch] text-pretty text-[#18130f] sm:mt-5">
             A private family archive for preserving lineage, memories, and the stories
             that live between generations.
           </p>
