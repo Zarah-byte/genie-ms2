@@ -83,11 +83,11 @@ export function ConstellationCanvas({
         style={{
           left: `${glowX}%`,
           top: `${glowY}%`,
-          width: "68vmax",
-          height: "68vmax",
+          width: "28vmax",
+          height: "28vmax",
           transform: "translate(-50%, -50%)",
           background:
-            "radial-gradient(circle, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.24) 18%, rgba(255,255,255,0.1) 42%, rgba(255,255,255,0.03) 60%, rgba(255,255,255,0) 74%)",
+            "radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.08) 22%, rgba(255,255,255,0.03) 46%, rgba(255,255,255,0.01) 62%, rgba(255,255,255,0) 78%)",
         }}
       />
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
