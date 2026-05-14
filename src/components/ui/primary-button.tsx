@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { GenieArrowRightIcon } from "@/components/ui/genie-icons";
 import { cn } from "@/lib/utils";
 
 type Variant = "cream" | "ink" | "ghost";
@@ -35,7 +35,7 @@ export function PrimaryButton({
       {...props}
     >
       {props.children}
-      {arrow ? <ArrowRight className="size-4" aria-hidden="true" /> : null}
+      {arrow ? <GenieArrowRightIcon /> : null}
     </button>
   );
 }
@@ -59,7 +59,7 @@ export function PrimaryButtonLink({
       {...props}
     >
       {props.children}
-      {arrow ? <ArrowRight className="size-4" aria-hidden="true" /> : null}
+      {arrow ? <GenieArrowRightIcon /> : null}
     </Link>
   );
 }

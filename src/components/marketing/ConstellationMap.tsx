@@ -8,6 +8,7 @@ import { DemoAskPanel, type AskState } from "@/components/marketing/DemoAskPanel
 import { DemoLegend } from "@/components/marketing/DemoLegend";
 import { DemoMemoryCard } from "@/components/marketing/DemoMemoryCard";
 import { DemoPersonCard } from "@/components/marketing/DemoPersonCard";
+import { GenieExploreIcon } from "@/components/ui/genie-icons";
 import { PrimaryButton, PrimaryButtonLink } from "@/components/ui/primary-button";
 import {
   clampScale,
@@ -73,10 +74,11 @@ export function ConstellationMap({
   }, []);
 
   const introViewportForWidth = useCallback((width: number): MapViewport => {
-    if (width >= 1024) return { x: width * 0.16, y: 0, scale: 1 };
-    if (width >= 768) return { x: width * 0.13, y: 0, scale: 1 };
-    if (width >= 640) return { x: width * 0.11, y: 0, scale: 1 };
-    return { x: width * 0.08, y: 0, scale: 1 };
+    if (width >= 1280) return { x: width * 0.17, y: 0, scale: 1 };
+    if (width >= 1024) return { x: width * 0.15, y: 0, scale: 0.98 };
+    if (width >= 768) return { x: width * 0.1, y: 0, scale: 0.96 };
+    if (width >= 640) return { x: width * 0.06, y: 0, scale: 0.94 };
+    return { x: width * 0.02, y: 0, scale: 0.9 };
   }, []);
 
   const getClampContext = useCallback((): ViewportClampContext | null => {
@@ -154,8 +156,9 @@ export function ConstellationMap({
   useEffect(() => {
     if (!containerSize.width) return;
 
+    const exploreScale = containerSize.width < 640 ? 0.96 : 1.04;
     const preset = isExploring
-      ? { x: 0, y: 0, scale: 1.04 }
+      ? { x: 0, y: 0, scale: exploreScale }
       : introViewportForWidth(containerSize.width);
 
     // Keep intro/explore camera presets aligned with responsive container changes.
@@ -164,9 +167,9 @@ export function ConstellationMap({
   }, [applyProgrammaticViewport, containerSize.width, introViewportForWidth, isExploring]);
 
   const handleExplore = useCallback(() => {
-    applyProgrammaticViewport({ x: 0, y: 0, scale: 1.04 });
+    applyProgrammaticViewport({ x: 0, y: 0, scale: containerSize.width < 640 ? 0.96 : 1.04 });
     onExplore();
-  }, [applyProgrammaticViewport, onExplore]);
+  }, [applyProgrammaticViewport, containerSize.width, onExplore]);
 
   const handleIntro = useCallback(() => {
     applyProgrammaticViewport(introViewportForWidth(containerSize.width));
@@ -331,10 +334,7 @@ export function ConstellationMap({
         tabIndex={isExploring ? -1 : undefined}
       >
         Explore
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
-          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M16.24 7.76001L14.436 13.171C14.3378 13.4656 14.1724 13.7333 13.9528 13.9528C13.7333 14.1724 13.4656 14.3378 13.171 14.436L7.76001 16.24L9.56401 10.829C9.66219 10.5344 9.82762 10.2668 10.0472 10.0472C10.2668 9.82762 10.5344 9.66219 10.829 9.56401L16.24 7.76001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <GenieExploreIcon className="size-[1.125rem]" />
       </button>
 
       {isExploring ? (
@@ -350,14 +350,14 @@ export function ConstellationMap({
 
       <div
         className={[
-          "absolute left-1/2 z-30 -translate-x-1/2 transition-all duration-700 motion-reduce:transition-none",
+          "absolute left-1/2 z-30 w-[min(calc(100vw-1.5rem),34rem)] -translate-x-1/2 transition-all duration-700 motion-reduce:transition-none sm:w-auto",
           isExploring
             ? "top-[max(0.6rem,env(safe-area-inset-top))] opacity-100"
             : "-top-20 pointer-events-none opacity-0"
         ].join(" ")}
       >
-        <div className="flex items-center rounded-full border border-white/[0.1] bg-[#0c0c0e]/85 shadow-[0_4px_28px_rgba(0,0,0,0.5)] backdrop-blur-md">
-          <span className="px-5 py-2.5 font-serif text-[0.88rem] text-[#f6f0e2]">
+        <div className="flex min-w-0 items-center rounded-full border border-white/[0.1] bg-[#0c0c0e]/85 shadow-[0_4px_28px_rgba(0,0,0,0.5)] backdrop-blur-md">
+          <span className="px-3 py-2.5 font-serif text-[0.88rem] text-[#f6f0e2] sm:px-5">
             Genie
           </span>
           <div className="h-5 w-px shrink-0 bg-white/10" />
@@ -365,7 +365,7 @@ export function ConstellationMap({
             type="text"
             placeholder="Ask a question..."
             value={inputValue}
-            className="w-44 bg-transparent px-4 py-2.5 text-sm text-white/80 outline-none placeholder:text-white/22 sm:w-60"
+            className="min-w-0 flex-1 bg-transparent px-3 py-2.5 text-sm text-white/80 outline-none placeholder:text-white/22 sm:w-60 sm:flex-none sm:px-4"
             onClick={(e) => e.stopPropagation()}
             onPointerDown={(e) => e.stopPropagation()}
             onChange={(e) => setInputValue(e.target.value)}
@@ -374,7 +374,7 @@ export function ConstellationMap({
             }}
           />
           <div className="mx-1 h-4 w-px shrink-0 bg-white/[0.08]" />
-          <div className="flex items-center gap-0.5 pr-2 py-1.5 pl-0.5">
+          <div className="flex shrink-0 items-center gap-0.5 py-1.5 pl-0.5 pr-1.5 sm:pr-2">
             <button
               type="button"
               aria-label="Search"
@@ -433,7 +433,7 @@ export function ConstellationMap({
       <div
         className={[
           "absolute left-[max(1rem,env(safe-area-inset-left))] z-20 transition-all duration-700 motion-reduce:transition-none md:left-8 max-[430px]:hidden",
-          isExploring ? "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] opacity-100 md:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)]" : "-bottom-32 opacity-0"
+          isExploring ? "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] opacity-100 sm:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)]" : "-bottom-32 opacity-0"
         ].join(" ")}
         aria-hidden={!isExploring}
       >
@@ -446,7 +446,7 @@ export function ConstellationMap({
         className={[
           "absolute z-20 shadow-[0_16px_40px_rgba(0,0,0,0.36)]",
           isExploring
-            ? "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 -translate-x-1/2 md:left-auto md:right-8 md:translate-x-0"
+            ? "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] left-1/2 -translate-x-1/2 sm:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] md:left-auto md:right-8 md:translate-x-0"
             : "bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] left-[max(1rem,env(safe-area-inset-left))] lg:hidden"
         ].join(" ")}
         arrow
@@ -470,7 +470,7 @@ export function ConstellationMap({
         className={[
           "fixed z-[60] max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl transition-all duration-300 motion-reduce:transition-none",
           isExploring
-            ? "right-[max(1rem,env(safe-area-inset-right))] top-[calc(env(safe-area-inset-top)+3.75rem)] md:right-8 md:top-20"
+            ? "inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+4.75rem)] top-auto sm:inset-x-auto sm:right-[max(1rem,env(safe-area-inset-right))] sm:top-[calc(env(safe-area-inset-top)+3.75rem)] md:right-8 md:top-20"
             : "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] right-[max(1rem,env(safe-area-inset-right))] md:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] md:right-8",
           selection ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
         ].join(" ")}

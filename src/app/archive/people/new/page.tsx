@@ -9,6 +9,7 @@ export default function NewPersonPage() {
     <ArchiveShell
       title="Add person"
       description="Add a parent, child, sibling, spouse, grandparent, cousin, chosen family member, or a remembered connection."
+      panelSide="right"
     >
       <PersonForm action={createPerson} />
     </ArchiveShell>

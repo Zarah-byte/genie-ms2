@@ -4,6 +4,7 @@ import { ConstellationBackdrop } from "@/components/constellation/constellation-
 import { FamilyLegend } from "@/components/constellation/family-legend";
 import { GenieLogo } from "@/components/ui/genie-logo";
 import { PrimaryButtonLink } from "@/components/ui/primary-button";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/archive/people/new", label: "Add Person", icon: Plus },
@@ -16,13 +17,17 @@ export function ArchiveShell({
   children,
   title,
   description,
-  action
+  action,
+  panelSide = "default"
 }: {
   children: React.ReactNode;
   title: string;
   description?: string;
   action?: React.ReactNode;
+  panelSide?: "default" | "right";
 }) {
+  const isRightPanel = panelSide === "right";
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#040406] text-[#f6f0e2]">
       <ConstellationBackdrop />
@@ -44,8 +49,20 @@ export function ArchiveShell({
         <FamilyLegend />
       </aside>
 
-      <main className="relative z-20 flex min-h-screen items-start px-3 py-20 sm:px-5 md:px-7">
-        <section className="paper-panel mt-8 w-full max-w-[min(100%,44rem)] p-6 sm:p-7">
+      <main
+        className={cn(
+          "relative z-20 flex min-h-screen items-start px-3 py-20 sm:px-5 md:px-7",
+          isRightPanel && "justify-end"
+        )}
+      >
+        <section
+          className={cn(
+            "paper-panel mt-8 w-full p-6 sm:p-7",
+            isRightPanel
+              ? "archive-panel-enter-right max-w-[min(100%,46rem)] lg:max-w-[min(48vw,47rem)]"
+              : "max-w-[min(100%,44rem)]"
+          )}
+        >
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="type-overline text-[#3a3029]/70">Private archive</p>
