@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f0e4;
+  --foreground: #241710;
+  --muted: #78695e;
+  --card: #fffaf1;
+  --line: #dfd0be;
+  --accent: #8b4a2f;
+  --accent-dark: #5a2e20;
+  --sage: #6f7b62;
+  --gold: #b78645;
+  --font-heading: "Ovo", Georgia, serif;
+  --font-body: "Mulish", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --safe-top: env(safe-area-inset-top);
+  --safe-right: env(safe-area-inset-right);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(183, 134, 69, 0.12), transparent 34rem),
+    linear-gradient(180deg, #fbf5ea 0%, var(--background) 48%, #efe2d0 100%);
+  color: var(--foreground);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: rgba(139, 74, 47, 0.18);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.archive-paper {
+  background-image:
+    linear-gradient(rgba(90, 46, 32, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 46, 32, 0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.safe-px {
+  padding-left: max(1rem, var(--safe-left));
+  padding-right: max(1rem, var(--safe-right));
+}
+
+.safe-pb {
+  padding-bottom: max(1rem, var(--safe-bottom));
+}
+
+.flow-wrapper .react-flow__node {
+  border: 0;
+  background: transparent;
+}
+
+.flow-wrapper .react-flow__handle {
+  opacity: 0;
+}
+
+.flow-wrapper .react-flow__edge-path {
+  stroke: #9b8776;
+  stroke-width: 1.7;
+}

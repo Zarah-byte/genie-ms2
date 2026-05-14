@@ -1,0 +1,96 @@
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - link "Kin Archive" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - img [ref=e7]
+      - text: Kin Archive
+    - navigation [ref=e10]:
+      - link "Demo tree" [ref=e11] [cursor=pointer]:
+        - /url: /#demo
+      - link "Stories" [ref=e12] [cursor=pointer]:
+        - /url: /#stories
+      - link "Privacy" [ref=e13] [cursor=pointer]:
+        - /url: /#privacy
+    - generic [ref=e14]:
+      - link "Log in" [ref=e15] [cursor=pointer]:
+        - /url: /login
+      - link "Start archive" [ref=e16] [cursor=pointer]:
+        - /url: /signup
+  - generic [ref=e18]:
+    - generic [ref=e19]:
+      - heading "A private place for the stories your family still carries." [level=1] [ref=e20]
+      - paragraph [ref=e21]: Build a family tree, preserve photographs, attach memories to people, and keep unknown details visible until someone remembers.
+      - generic [ref=e22]:
+        - link "Start your own archive" [ref=e23] [cursor=pointer]:
+          - /url: /signup
+          - text: Start your own archive
+          - img [ref=e24]
+        - link "Explore fake demo" [ref=e26] [cursor=pointer]:
+          - /url: "#demo"
+    - img "Layered archive materials including photographs, letters, and recipe cards" [ref=e29]
+  - generic [ref=e31]:
+    - generic [ref=e32]:
+      - heading "Made for partial memories." [level=2] [ref=e33]
+      - paragraph [ref=e34]: Kin Archive lets families record what they know without pretending the archive is complete. Unknown birthplaces, disputed dates, unnamed people in photos, and handwritten recipes all have somewhere gentle to live.
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - img [ref=e37]
+        - heading "Map relationships" [level=3] [ref=e41]
+        - paragraph [ref=e42]: Create people, partners, parents, siblings, and chosen family ties.
+      - generic [ref=e43]:
+        - img [ref=e44]
+        - heading "Grow stories slowly" [level=3] [ref=e47]
+        - paragraph [ref=e48]: Attach memories, recipes, letters, places, and photos to the people they belong to.
+      - generic [ref=e49]:
+        - img [ref=e50]
+        - heading "Invite with care" [level=3] [ref=e54]
+        - paragraph [ref=e55]: Owners edit privately. Family PIN viewers can read without gaining account control.
+  - generic [ref=e57]:
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - heading "Explore a sample family tree." [level=2] [ref=e60]
+        - paragraph [ref=e61]: This public demo uses mock people only. Click a family member to see their sample details and connected story.
+      - link "Start your own archive" [ref=e62] [cursor=pointer]:
+        - /url: /signup
+    - generic [ref=e63]:
+      - img [ref=e68]
+      - generic [ref=e71]:
+        - paragraph [ref=e73]: Selected person
+        - heading "Alina Rahman" [level=3] [ref=e74]
+        - paragraph [ref=e75]: 1932-04-12 · Sylhet
+        - paragraph [ref=e76]: Remembered for cardamom tea, precise handwriting, and a soft laugh at the kitchen table.
+        - generic [ref=e77]:
+          - paragraph [ref=e78]: Connected story
+          - heading "The tea tin with the train ticket" [level=4] [ref=e79]
+          - paragraph [ref=e80]: Inside an old tin of black tea, Omar kept the ticket from the week the family first arrived in London.
+        - link "Start your own archive" [ref=e81] [cursor=pointer]:
+          - /url: /signup
+  - generic [ref=e83]:
+    - heading "Stories sit beside the people." [level=2] [ref=e84]
+    - generic [ref=e85]:
+      - generic [ref=e88]:
+        - paragraph [ref=e89]: Winter 1964
+        - heading "The tea tin with the train ticket" [level=3] [ref=e90]
+        - paragraph [ref=e91]: Inside an old tin of black tea, Omar kept the ticket from the week the family first arrived in London.
+      - generic [ref=e94]:
+        - paragraph [ref=e95]: Undated recipe card
+        - heading "Maia's mango pickle margin notes" [level=3] [ref=e96]
+        - paragraph [ref=e97]: The recipe changed each time someone copied it, but the warning about too much mustard oil survived.
+      - generic [ref=e100]:
+        - paragraph [ref=e101]: Possibly 1978
+        - heading "A porch photograph with three unknown cousins" [level=3] [ref=e102]
+        - paragraph [ref=e103]: No one agrees on the cousins' names yet. The archive keeps the uncertainty visible instead of erasing it.
+  - generic [ref=e105]:
+    - heading "Private by default, shareable by invitation." [level=2] [ref=e106]
+    - generic [ref=e107]:
+      - generic [ref=e108]: Supabase Auth protects owner accounts.
+      - generic [ref=e109]: Row Level Security guards every archive-owned table.
+      - generic [ref=e110]: PIN access is read-only for invited relatives.
+      - generic [ref=e111]: Images are organized under archive-specific storage paths.
+  - generic [ref=e112]:
+    - heading "Start with one person, one photograph, or one story someone still tells." [level=2] [ref=e113]
+    - link "Create your archive" [ref=e114] [cursor=pointer]:
+      - /url: /signup
+  - generic [ref=e116]:
+    - paragraph [ref=e117]: Kin Archive · Major Studio Capstone MVP
+    - paragraph [ref=e118]: Mock demo data only on the public site.

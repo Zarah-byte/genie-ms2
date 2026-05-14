@@ -1,0 +1,68 @@
+- main [ref=e2]:
+  - region "Genie family archive demo" [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - button "Open You" [ref=e16]
+        - button "Open Amira Yusuf" [active] [ref=e17]
+        - button "Open Samir Yusuf" [ref=e18]
+        - button "Open Leila Rahman" [ref=e19]
+        - button "Open Nora Yusuf" [ref=e20]
+        - button "Open Idris Noor" [ref=e21]
+        - 'button "Open memory: The mango pickle recipe" [ref=e22]':
+          - img [ref=e23]
+        - 'button "Open memory: A letter from the port" [ref=e25]':
+          - img [ref=e26]
+        - 'button "Open memory: Porch photograph" [ref=e28]':
+          - img [ref=e29]
+        - 'button "Open memory: Voice note after dinner" [ref=e31]':
+          - img [ref=e32]
+        - 'button "Open memory: Unknown street" [ref=e34]':
+          - img [ref=e35]
+      - button "Explore" [ref=e37]:
+        - text: Explore
+        - generic [ref=e38]: ⦿
+      - list [ref=e41]:
+        - listitem [ref=e42]: you
+        - listitem [ref=e44]: first connection
+        - listitem [ref=e46]: second connection
+        - listitem [ref=e48]:
+          - img [ref=e49]
+          - text: memories
+    - complementary [ref=e51]:
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - paragraph [ref=e54]: Genie
+          - paragraph [ref=e55]: A private family archive for preserving lineage, memories, and the stories that live between generations.
+        - generic [ref=e56]:
+          - heading "How it Works" [level=1] [ref=e57]
+          - list [ref=e58]:
+            - listitem [ref=e59]:
+              - generic [ref=e60]: "01."
+              - generic [ref=e61]:
+                - generic [ref=e62]: Add your people
+                - generic [ref=e63]: Create profiles with names, dates, places, and photographs for every member of your family.
+            - listitem [ref=e64]:
+              - generic [ref=e65]: "02."
+              - generic [ref=e66]:
+                - generic [ref=e67]: Map the relationships
+                - generic [ref=e68]: Connect parents, children, siblings, and spouses to build your family tree.
+            - listitem [ref=e69]:
+              - generic [ref=e70]: "03."
+              - generic [ref=e71]:
+                - generic [ref=e72]: Attach the memories
+                - generic [ref=e73]: Upload photographs, letters, recipes, voice notes, and documents.
+            - listitem [ref=e74]:
+              - generic [ref=e75]: "04."
+              - generic [ref=e76]:
+                - generic [ref=e77]: Write the stories
+                - generic [ref=e78]: "Add the context a birth certificate never could: the language, places, and memories passed down."
+            - listitem [ref=e79]:
+              - generic [ref=e80]: "05."
+              - generic [ref=e81]:
+                - generic [ref=e82]: Share with family
+                - generic [ref=e83]: Invite relatives to view and contribute through a private family PIN.
+        - link "Get Started" [ref=e85] [cursor=pointer]:
+          - /url: /signup
+          - text: Get Started
+          - img [ref=e86]
