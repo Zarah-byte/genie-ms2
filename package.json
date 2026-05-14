@@ -13,6 +13,7 @@
     "optimize:svg": "svgo --config=svgo.config.mjs --folder public/placeholders"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.96.0",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "clsx": "latest",
@@ -30,9 +31,9 @@
     "@types/react-dom": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
-    "vitest": "latest",
+    "svgo": "latest",
     "tailwindcss": "latest",
     "typescript": "latest",
-    "svgo": "latest"
+    "vitest": "latest"
   }
 }

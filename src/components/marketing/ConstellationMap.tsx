@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Menu, Plus, Search } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ConstellationCanvas } from "@/components/constellation/constellation-canvas";
+import { DemoAskPanel, type AskState } from "@/components/marketing/DemoAskPanel";
 import { DemoLegend } from "@/components/marketing/DemoLegend";
 import { DemoMemoryCard } from "@/components/marketing/DemoMemoryCard";
 import { DemoPersonCard } from "@/components/marketing/DemoPersonCard";
@@ -38,6 +39,8 @@ export function ConstellationMap({
   onIntro: () => void;
 }) {
   const [selection, setSelection] = useState<Selection>(null);
+  const [askState, setAskState] = useState<AskState>({ status: "idle" });
+  const [inputValue, setInputValue] = useState("");
   const [viewport, setViewport] = useState<MapViewport>({ x: 0, y: 0, scale: 1 });
   const viewportRef = useRef<MapViewport>(viewport);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
@@ -196,6 +199,41 @@ export function ConstellationMap({
     [clampFromContext]
   );
 
+  const handleAsk = useCallback(async (question: string) => {
+    if (!question.trim()) return;
+    setInputValue("");
+    setAskState({ status: "loading" });
+
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question })
+      });
+
+      if (!res.ok || !res.body) {
+        setAskState({ status: "error", message: "Couldn't reach the archive. Try again." });
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let answer = "";
+      setAskState({ status: "streaming", question, answer: "" });
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        answer += decoder.decode(value, { stream: true });
+        setAskState({ status: "streaming", question, answer });
+      }
+
+      setAskState({ status: "done", question, answer });
+    } catch {
+      setAskState({ status: "error", message: "Something went wrong. Please try again." });
+    }
+  }, []);
+
   const selectedPerson = selection?.type === "person"
     ? demoPeople.find((item) => item.id === selection.id)
     : null;
@@ -265,6 +303,60 @@ export function ConstellationMap({
 
       <div
         className={[
+          "absolute left-1/2 z-30 -translate-x-1/2 transition-all duration-700 motion-reduce:transition-none",
+          isExploring
+            ? "top-[max(0.6rem,env(safe-area-inset-top))] opacity-100"
+            : "-top-20 pointer-events-none opacity-0"
+        ].join(" ")}
+      >
+        <div className="flex items-center overflow-hidden rounded-full border border-white/8 bg-[#0c0c0e]/85 shadow-[0_4px_28px_rgba(0,0,0,0.5)] backdrop-blur-md">
+          <span className="px-5 py-2.5 font-serif text-[0.88rem] text-[#f6f0e2]/90">
+            Genie
+          </span>
+          <div className="h-5 w-px shrink-0 bg-white/10" />
+          <input
+            type="text"
+            placeholder="Ask a question..."
+            value={inputValue}
+            className="w-44 bg-transparent px-4 py-2.5 text-sm text-white/80 outline-none placeholder:text-white/30 sm:w-60"
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAsk(inputValue);
+            }}
+          />
+          <div className="flex items-center gap-1 px-1.5 py-1.5">
+            <button
+              type="button"
+              aria-label="Search"
+              className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
+              onClick={(e) => { e.stopPropagation(); handleAsk(inputValue); }}
+            >
+              <Search className="size-3.5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              aria-label="Add"
+              className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Plus className="size-3.5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              aria-label="Menu"
+              className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Menu className="size-4" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={[
           "absolute left-[max(1rem,env(safe-area-inset-left))] z-20 transition-all duration-700 motion-reduce:transition-none md:left-8 max-[430px]:hidden",
           isExploring ? "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] opacity-100 md:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)]" : "-bottom-32 opacity-0"
         ].join(" ")}
@@ -287,6 +379,18 @@ export function ConstellationMap({
         Get Started
       </PrimaryButtonLink>
 
+      {/* AI answer panel — below the nav */}
+      <div
+        className={[
+          "absolute left-1/2 z-30 -translate-x-1/2 transition-all duration-300 motion-reduce:transition-none",
+          isExploring ? "top-[calc(max(0.6rem,env(safe-area-inset-top))+3.5rem)]" : "top-0 pointer-events-none opacity-0",
+          askState.status !== "idle" ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
+        ].join(" ")}
+      >
+        <DemoAskPanel state={askState} onClose={() => setAskState({ status: "idle" })} />
+      </div>
+
+      {/* Person / memory detail cards */}
       <div
         className={[
           "absolute z-30 transition-all duration-300 motion-reduce:transition-none",
