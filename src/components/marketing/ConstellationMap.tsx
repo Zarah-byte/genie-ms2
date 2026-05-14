@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, Menu, Plus, Search } from "lucide-react";
+import { ArrowLeft, BookOpen, Menu, Plus, Search, User } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ConstellationCanvas } from "@/components/constellation/constellation-canvas";
 import { DemoAskPanel, type AskState } from "@/components/marketing/DemoAskPanel";
@@ -41,11 +42,14 @@ export function ConstellationMap({
   const [selection, setSelection] = useState<Selection>(null);
   const [askState, setAskState] = useState<AskState>({ status: "idle" });
   const [inputValue, setInputValue] = useState("");
+  const [addMenuOpen, setAddMenuOpen] = useState(false);
   const [viewport, setViewport] = useState<MapViewport>({ x: 0, y: 0, scale: 1 });
   const viewportRef = useRef<MapViewport>(viewport);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{ pointerId: number; x: number; y: number } | null>(null);
+  const addButtonRef = useRef<HTMLDivElement | null>(null);
+  const addMenuRef = useRef<HTMLDivElement | null>(null);
 
   const pointBounds = useMemo(() => {
     const points = [...demoPeople, ...demoMemories];
@@ -108,6 +112,19 @@ export function ConstellationMap({
   useEffect(() => {
     viewportRef.current = viewport;
   }, [viewport]);
+
+  useEffect(() => {
+    if (!addMenuOpen) return;
+    const handleMouseDown = (e: MouseEvent) => {
+      if (
+        addButtonRef.current?.contains(e.target as Node) ||
+        addMenuRef.current?.contains(e.target as Node)
+      ) return;
+      setAddMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => document.removeEventListener("mousedown", handleMouseDown);
+  }, [addMenuOpen]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -309,7 +326,7 @@ export function ConstellationMap({
             : "-top-20 pointer-events-none opacity-0"
         ].join(" ")}
       >
-        <div className="flex items-center overflow-hidden rounded-full border border-white/8 bg-[#0c0c0e]/85 shadow-[0_4px_28px_rgba(0,0,0,0.5)] backdrop-blur-md">
+        <div className="flex items-center rounded-full border border-white/8 bg-[#0c0c0e]/85 shadow-[0_4px_28px_rgba(0,0,0,0.5)] backdrop-blur-md">
           <span className="px-5 py-2.5 font-serif text-[0.88rem] text-[#f6f0e2]/90">
             Genie
           </span>
@@ -335,14 +352,41 @@ export function ConstellationMap({
             >
               <Search className="size-3.5" aria-hidden="true" />
             </button>
-            <button
-              type="button"
-              aria-label="Add"
-              className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Plus className="size-3.5" aria-hidden="true" />
-            </button>
+            <div className="relative" ref={addButtonRef}>
+              <button
+                type="button"
+                aria-label="Add"
+                aria-expanded={addMenuOpen}
+                className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
+                onClick={(e) => { e.stopPropagation(); setAddMenuOpen((v) => !v); }}
+              >
+                <Plus className="size-3.5" aria-hidden="true" />
+              </button>
+
+              {addMenuOpen && (
+                <div
+                  ref={addMenuRef}
+                  className="absolute right-0 top-10 z-50 flex w-44 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0e]/90 py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] backdrop-blur-md"
+                >
+                  <Link
+                    href="/signup"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/80 transition hover:bg-white/8 hover:text-[#f6f0e2]"
+                    onClick={() => setAddMenuOpen(false)}
+                  >
+                    <User className="size-3.5 shrink-0" aria-hidden="true" />
+                    Add a person
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/80 transition hover:bg-white/8 hover:text-[#f6f0e2]"
+                    onClick={() => setAddMenuOpen(false)}
+                  >
+                    <BookOpen className="size-3.5 shrink-0" aria-hidden="true" />
+                    Add a memory
+                  </Link>
+                </div>
+              )}
+            </div>
             <button
               type="button"
               aria-label="Menu"
