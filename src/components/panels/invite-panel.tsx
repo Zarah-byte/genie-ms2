@@ -25,10 +25,10 @@ export function InvitePanel({
           <CopyPinButton pin={pin} />
         </div>
       ) : null}
-      {note ? <p className="mt-3 text-xs leading-5 text-[#3a3029]/75">{note}</p> : null}
+      {note ? <p className="type-caption mt-3 text-[#3a3029]/75">{note}</p> : null}
       <div className="archive-divider mt-6 pt-5">
-        <p className="text-xs uppercase tracking-[0.16em] text-[#3a3029]/70">Permissions</p>
-        <ul className="mt-2 grid gap-1 text-sm text-[#2c241f]">
+        <p className="type-overline text-[#3a3029]/70">Permissions</p>
+        <ul className="type-body mt-2 grid gap-1 text-[#2c241f]">
           <li>View only</li>
           <li>Can contribute</li>
           <li>Can edit people and memories</li>
