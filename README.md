@@ -25,6 +25,33 @@ openssl rand -base64 32
 4. Run the SQL in `supabase/migrations/0001_initial_schema.sql` in Supabase SQL Editor or through the Supabase CLI.
 5. Create a private storage bucket named `archive-media`.
 
+## Demo Account Seed
+
+Use this for critiques, presentations, and portfolio demos with real backend-authenticated data.
+
+1. Ensure these env vars are set in `.env.local`:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (server-only, never client-side)
+   - `INVITE_CODE_PEPPER`
+2. Run:
+
+```bash
+npm run seed:demo
+```
+
+What the script does:
+- Creates or updates auth user `demo@familyarchive.local` with password `DemoFamily2026!`.
+- Ensures profile + owner archive + owner membership exist.
+- Creates/reuses family PIN `FAMILY-DEMO-2026` (stored hashed in DB, not raw).
+- Seeds a multi-generation family dataset (people, relationships, stories, story-person links, and media placeholders).
+- Runs idempotently: re-running updates records and avoids duplicate link rows.
+
+Demo login:
+- Email: `demo@familyarchive.local`
+- Password: `DemoFamily2026!`
+- Family PIN (for `/join`): `FAMILY-DEMO-2026`
+
 ## MVP Routes
 
 - `/` public marketing site with explorable fake family tree.

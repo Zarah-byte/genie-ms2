@@ -35,5 +35,6 @@ export type ArchiveSummary = {
   id: string;
   name: string;
   owner_id: string;
+  description?: string | null;
   invite_code?: string;
 };

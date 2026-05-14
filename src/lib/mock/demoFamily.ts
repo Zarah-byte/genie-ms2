@@ -9,6 +9,7 @@ export type DemoPerson = {
   color: "you" | "first" | "second";
   x: number;
   y: number;
+  image_url?: string;
 };
 
 export type DemoMemory = {
@@ -57,7 +58,8 @@ export const demoPeople: DemoPerson[] = [
     ],
     color: "first",
     x: 66,
-    y: 27
+    y: 27,
+    image_url: "/placeholders/alina.svg"
   },
   {
     id: "samir",
@@ -70,7 +72,8 @@ export const demoPeople: DemoPerson[] = [
     memories: ["The tea tin with the train ticket"],
     color: "first",
     x: 36,
-    y: 74
+    y: 74,
+    image_url: "/placeholders/samir.svg"
   },
   {
     id: "leila",
@@ -83,7 +86,8 @@ export const demoPeople: DemoPerson[] = [
     memories: ["Porch photograph, three unknown cousins"],
     color: "second",
     x: 29,
-    y: 31
+    y: 31,
+    image_url: "/placeholders/maia.svg"
   },
   {
     id: "nora",
@@ -96,7 +100,8 @@ export const demoPeople: DemoPerson[] = [
     memories: ["Shoebox photo labels", "First school portrait"],
     color: "second",
     x: 76,
-    y: 78
+    y: 78,
+    image_url: "/placeholders/nina.svg"
   },
   {
     id: "idris",
@@ -109,7 +114,8 @@ export const demoPeople: DemoPerson[] = [
     memories: ["Voice note after dinner"],
     color: "first",
     x: 84,
-    y: 10
+    y: 10,
+    image_url: "/placeholders/omar.svg"
   }
 ];
 

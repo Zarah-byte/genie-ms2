@@ -23,7 +23,7 @@ import {
   type MapViewport
 } from "@/lib/map/viewport";
 import { mockPeople, mockRelationships, mockStories } from "@/lib/mock-data";
-import { Person } from "@/lib/types";
+import { Person, Relationship, Story } from "@/lib/types";
 
 function PersonNode({ data }: { data: { person: Person; selected: boolean } }) {
   return (
@@ -50,27 +50,86 @@ function PersonNode({ data }: { data: { person: Person; selected: boolean } }) {
 
 const nodeTypes = { person: PersonNode };
 
-const positions: Record<string, { x: number; y: number }> = {
-  alina: { x: 110, y: 30 },
-  omar: { x: 380, y: 30 },
-  maia: { x: 150, y: 220 },
-  samir: { x: 420, y: 220 },
-  nina: { x: 250, y: 410 }
-};
-
 const TREE_NODE_WIDTH = 176;
 const TREE_NODE_HEIGHT = 92;
 
-export function FamilyTreeDemo({ compact = false }: { compact?: boolean }) {
-  const [selectedId, setSelectedId] = useState("alina");
+function birthYear(person: Person): number {
+  if (!person.birth_date) return Number.POSITIVE_INFINITY;
+  const year = Number.parseInt(person.birth_date.slice(0, 4), 10);
+  return Number.isNaN(year) ? Number.POSITIVE_INFINITY : year;
+}
+
+function buildTreePositions(people: Person[]) {
+  const rows = 3;
+  const minX = 90;
+  const maxX = 620;
+  const startY = 30;
+  const yGap = 190;
+
+  const sorted = [...people].sort((a, b) => {
+    const aYear = birthYear(a);
+    const bYear = birthYear(b);
+    if (aYear === bYear) return a.full_name.localeCompare(b.full_name);
+    return aYear - bYear;
+  });
+
+  const rowSize = Math.max(1, Math.ceil(sorted.length / rows));
+  const positions: Record<string, { x: number; y: number }> = {};
+
+  for (let row = 0; row < rows; row += 1) {
+    const rowPeople = sorted.slice(row * rowSize, (row + 1) * rowSize);
+    if (!rowPeople.length) continue;
+    const step = rowPeople.length === 1 ? 0 : (maxX - minX) / (rowPeople.length - 1);
+
+    rowPeople.forEach((person, index) => {
+      positions[person.id] = {
+        x: Math.round(minX + step * index),
+        y: startY + row * yGap
+      };
+    });
+  }
+
+  return positions;
+}
+
+type FamilyTreeDemoProps = {
+  compact?: boolean;
+  people?: Person[];
+  relationships?: Relationship[];
+  stories?: Story[];
+  ctaHref?: string;
+  ctaLabel?: string;
+};
+
+export function FamilyTreeDemo({
+  compact = false,
+  people: peopleProp,
+  relationships: relationshipsProp,
+  stories: storiesProp,
+  ctaHref = "/signup",
+  ctaLabel = "Start your own archive"
+}: FamilyTreeDemoProps) {
+  const people = peopleProp?.length ? peopleProp : mockPeople;
+  const relationships = relationshipsProp?.length ? relationshipsProp : mockRelationships;
+  const stories = storiesProp?.length ? storiesProp : mockStories;
+  const positions = useMemo(() => buildTreePositions(people), [people]);
+  const [selectedId, setSelectedId] = useState(people[0]?.id ?? "");
   const [mapViewport, setMapViewport] = useState<MapViewport>({ x: 0, y: 0, scale: 0.92 });
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const mapViewportRef = useRef<MapViewport>(mapViewport);
   const flowRef = useRef<ReactFlowInstance<Node, Edge> | null>(null);
   const flowWrapperRef = useRef<HTMLDivElement | null>(null);
-  const selected = mockPeople.find((person) => person.id === selectedId) ?? mockPeople[0];
-  const story =
-    mockStories.find((item) => item.person_ids?.includes(selected.id)) ?? mockStories[0];
+
+  useEffect(() => {
+    if (!people.some((person) => person.id === selectedId)) {
+      setSelectedId(people[0]?.id ?? "");
+    }
+  }, [people, selectedId]);
+
+  const selected = people.find((person) => person.id === selectedId) ?? people[0];
+  const story = selected
+    ? stories.find((item) => item.person_ids?.includes(selected.id)) ?? stories[0]
+    : undefined;
 
   const contentBounds = useMemo<MapBounds>(() => {
     const entries = Object.values(positions);
@@ -83,31 +142,31 @@ export function FamilyTreeDemo({ compact = false }: { compact?: boolean }) {
       minY: Math.min(...ys) - TREE_NODE_HEIGHT * 0.4,
       maxY: Math.max(...ys) + TREE_NODE_HEIGHT * 1.4
     };
-  }, []);
+  }, [positions]);
 
   const translateExtent = useMemo(() => buildTranslateExtent(contentBounds), [contentBounds]);
 
   const nodes: Node[] = useMemo(
     () =>
-      mockPeople.map((person) => ({
+      people.map((person) => ({
         id: person.id,
         type: "person",
-        position: positions[person.id],
+        position: positions[person.id] ?? { x: 120, y: 100 },
         data: { person, selected: person.id === selectedId }
       })),
-    [selectedId]
+    [people, positions, selectedId]
   );
 
   const edges: Edge[] = useMemo(
     () =>
-      mockRelationships.map((relationship) => ({
+      relationships.map((relationship) => ({
         id: relationship.id,
         source: relationship.person_one_id,
         target: relationship.person_two_id,
         type: "smoothstep",
         animated: relationship.relationship_type === "partner"
       })),
-    []
+    [relationships]
   );
 
   const getClampContext = useCallback(() => {
@@ -258,23 +317,29 @@ export function FamilyTreeDemo({ compact = false }: { compact?: boolean }) {
       </div>
       <Card className="p-6">
         <div className="relative mb-5 h-52 overflow-hidden rounded-lg bg-[#eadcc9]">
-          {selected.image_url ? (
+          {selected?.image_url ? (
             <Image src={selected.image_url} alt="" fill className="object-cover" />
           ) : null}
         </div>
         <p className="text-sm uppercase tracking-[0.18em] text-[#8b4a2f]">Selected person</p>
-        <h3 className="mt-2 font-serif text-3xl font-semibold">{selected.full_name}</h3>
+        <h3 className="mt-2 font-serif text-3xl font-semibold">{selected?.full_name ?? "No person selected"}</h3>
         <p className="mt-2 text-sm text-[#78695e]">
-          {selected.birth_date || "Birth date unknown"} · {selected.birth_place || "Place unknown"}
+          {selected?.birth_date || "Birth date unknown"} · {selected?.birth_place || "Place unknown"}
         </p>
-        <p className="mt-4 leading-7 text-[#4c3a2f]">{selected.notes}</p>
+        <p className="mt-4 leading-7 text-[#4c3a2f]">
+          {selected?.notes ?? "Select a person to view their remembered details."}
+        </p>
         <div className="mt-6 rounded-lg border border-[#dfd0be] bg-[#f7f0e4] p-4">
           <p className="text-xs uppercase tracking-[0.18em] text-[#8b4a2f]">Connected story</p>
-          <h4 className="mt-2 font-serif text-2xl font-semibold">{story.title}</h4>
-          <p className="mt-2 text-sm leading-6 text-[#5c4d42]">{story.excerpt}</p>
+          <h4 className="mt-2 font-serif text-2xl font-semibold">
+            {story?.title ?? "No linked stories yet"}
+          </h4>
+          <p className="mt-2 text-sm leading-6 text-[#5c4d42]">
+            {story?.excerpt ?? "Add stories and link them to people to make this branch feel vivid."}
+          </p>
         </div>
-        <ButtonLink href="/signup" className="mt-6 w-full">
-          Start your own archive
+        <ButtonLink href={ctaHref} className="mt-6 w-full">
+          {ctaLabel}
         </ButtonLink>
       </Card>
     </div>
