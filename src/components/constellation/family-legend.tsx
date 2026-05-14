@@ -25,7 +25,7 @@ export function FamilyLegend({ items = defaultItems }: { items?: LegendItem[] })
                   item.type === "you"
                     ? "bg-white"
                     : item.type === "first"
-                      ? "bg-[#9090ff]"
+                      ? "bg-[#a560f0]"
                       : "bg-[#f03da9]"
                 ].join(" ")}
               />

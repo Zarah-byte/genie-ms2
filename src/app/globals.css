@@ -9,7 +9,7 @@
   --line: rgba(255, 255, 255, 0.14);
   --dotted-line: rgba(255, 255, 255, 0.28);
   --node-you: #ffffff;
-  --node-first: #9090ff;
+  --node-first: #a560f0;
   --node-second: #f03da9;
   --memory-star: #f6f2ea;
   --pill-dark: #23201b;
@@ -97,9 +97,7 @@ select {
 .celestial-bg {
   background-color: #040406;
   background-image:
-    radial-gradient(circle at 54% 42%, rgba(255, 255, 255, 0.2), transparent 18rem),
-    radial-gradient(circle at 24% 30%, rgba(144, 144, 255, 0.1), transparent 22rem),
-    radial-gradient(circle at 74% 72%, rgba(240, 61, 169, 0.08), transparent 22rem);
+    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.11), transparent 36rem);
 }
 
 .paper-panel {
@@ -225,9 +223,9 @@ select {
 }
 
 .constellation-line {
-  stroke: var(--dotted-line);
+  stroke: rgba(255, 255, 255, 0.42);
   stroke-width: 1;
-  stroke-dasharray: 1 4;
+  stroke-dasharray: 3 6;
 }
 
 @media (prefers-reduced-motion: reduce) {

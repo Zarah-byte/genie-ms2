@@ -59,10 +59,12 @@ export function ConstellationCanvas({
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
         <defs>
           <radialGradient id="constellationGlow">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.32" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+            <stop offset="40%" stopColor="#ffffff" stopOpacity="0.15" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </radialGradient>
         </defs>
+        <circle cx="50%" cy="44%" r="22%" fill="url(#constellationGlow)" />
         {relationshipLines.map((line) => (
           <line
             key={line.id}
@@ -73,7 +75,6 @@ export function ConstellationCanvas({
             className="constellation-line"
           />
         ))}
-        <circle cx="50%" cy="44%" r="13%" fill="url(#constellationGlow)" />
       </svg>
 
       {people.map((person) => (
