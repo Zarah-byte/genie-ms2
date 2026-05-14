@@ -468,9 +468,9 @@ export function ConstellationMap({
       {/* Person / memory detail cards */}
       <div
         className={[
-          "fixed z-[60] max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl transition-all duration-300 motion-reduce:transition-none",
+          "fixed z-[60] max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl transition-all duration-300 motion-reduce:transition-none max-sm:flex max-sm:justify-center",
           isExploring
-            ? "inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+4.75rem)] top-auto sm:inset-x-auto sm:right-[max(1rem,env(safe-area-inset-right))] sm:top-[calc(env(safe-area-inset-top)+3.75rem)] md:right-8 md:top-20"
+            ? "inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+4.75rem)] top-auto sm:inset-x-auto sm:bottom-auto sm:right-[max(1rem,env(safe-area-inset-right))] sm:top-[calc(env(safe-area-inset-top)+3.75rem)] md:right-8 md:top-20"
             : "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] right-[max(1rem,env(safe-area-inset-right))] md:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] md:right-8",
           selection ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
         ].join(" ")}

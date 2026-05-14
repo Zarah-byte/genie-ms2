@@ -40,7 +40,8 @@ export const demoPeople: DemoPerson[] = [
     memories: ["A first photo upload", "Voice note from family reunion"],
     color: "you",
     x: 47,
-    y: 42
+    y: 42,
+    image_url: "/demo-tree/archive-keeper.png"
   },
   {
     id: "amina",
@@ -59,7 +60,7 @@ export const demoPeople: DemoPerson[] = [
     color: "first",
     x: 66,
     y: 27,
-    image_url: "/placeholders/alina.svg"
+    image_url: "/demo-tree/amina-rahman.png"
   },
   {
     id: "samir",
@@ -73,7 +74,7 @@ export const demoPeople: DemoPerson[] = [
     color: "first",
     x: 36,
     y: 74,
-    image_url: "/placeholders/samir.svg"
+    image_url: "/demo-tree/samir-yusuf.png"
   },
   {
     id: "leila",
@@ -87,21 +88,21 @@ export const demoPeople: DemoPerson[] = [
     color: "second",
     x: 29,
     y: 31,
-    image_url: "/placeholders/maia.svg"
+    image_url: "/demo-tree/leila-rahman.png"
   },
   {
     id: "nora",
-    name: "Nora Yusuf",
-    relationship: "Mother",
+    name: "Arman Yusuf",
+    relationship: "Father",
     dates: "b. 1966",
     place: "Queens",
     story:
-      "The shoebox of photographs came from her closet, each envelope labeled with a place, a season, or a question mark.",
+      "The shoebox of photographs came from his closet, each envelope labeled with a place, a season, or a question mark.",
     memories: ["Shoebox photo labels", "First school portrait"],
     color: "second",
     x: 76,
     y: 78,
-    image_url: "/placeholders/nina.svg"
+    image_url: "/demo-tree/arman-yusuf.png"
   },
   {
     id: "idris",
@@ -115,7 +116,7 @@ export const demoPeople: DemoPerson[] = [
     color: "first",
     x: 84,
     y: 10,
-    image_url: "/placeholders/omar.svg"
+    image_url: "/demo-tree/idris-noor.png"
   }
 ];
 
@@ -137,7 +138,7 @@ export const demoMemories: DemoMemory[] = [
     dateOrPlace: "Queens, 1984",
     excerpt:
       "A stained recipe card remembers what no one wrote in full: less mustard oil if the mangoes are young.",
-    relatedPeople: ["Amina Rahman", "Nora Yusuf"],
+    relatedPeople: ["Amina Rahman", "Arman Yusuf"],
     x: 24,
     y: 52
   },
@@ -157,7 +158,7 @@ export const demoMemories: DemoMemory[] = [
     dateOrPlace: "Brooklyn, possibly 1978",
     excerpt:
       "Five cousins on the porch. Two names are certain, one is disputed, and two are waiting for someone to remember.",
-    relatedPeople: ["Leila Rahman", "Nora Yusuf", "Idris Noor"],
+    relatedPeople: ["Leila Rahman", "Arman Yusuf", "Idris Noor"],
     x: 90,
     y: 35
   },

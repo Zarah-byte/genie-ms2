@@ -61,7 +61,7 @@ export function DemoAskPanel({
 
       {state.status === "done" && (
         <p className="type-caption mt-4 text-[#6b6257]">
-          Answered from your family archive · Powered by Claude
+          Answered from the Genie demo archive
         </p>
       )}
     </div>

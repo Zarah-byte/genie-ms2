@@ -1,6 +1,6 @@
 # Genie
 
-A private family archive MVP called Genie, for preserving family trees, stories, photographs, recipes, migrations, letters, relationships, and unknown history with care.
+Genie is a private family archive MVP for preserving family trees, stories, photographs, recipes, migrations, letters, relationships, and unknown history with care.
 
 ## Getting Started
 
@@ -41,14 +41,14 @@ npm run seed:demo
 ```
 
 What the script does:
-- Creates or updates auth user `demo@familyarchive.local` with password `DemoFamily2026!`.
+- Creates or updates auth user `demo@genie.local` with password `DemoFamily2026!`.
 - Ensures profile + owner archive + owner membership exist.
 - Creates/reuses family PIN `FAMILY-DEMO-2026` (stored hashed in DB, not raw).
 - Seeds a multi-generation family dataset (people, relationships, stories, story-person links, and media placeholders).
 - Runs idempotently: re-running updates records and avoids duplicate link rows.
 
 Demo login:
-- Email: `demo@familyarchive.local`
+- Email: `demo@genie.local`
 - Password: `DemoFamily2026!`
 - Family PIN (for `/join`): `FAMILY-DEMO-2026`
 

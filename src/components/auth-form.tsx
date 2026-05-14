@@ -7,6 +7,9 @@ import { Field, Input } from "@/components/ui/form";
 import { authSchema } from "@/lib/schemas";
 import { createClient } from "@/lib/supabase/client";
 
+const DEMO_EMAIL = "demo@genie.local";
+const DEMO_PASSWORD = "DemoFamily2026!";
+
 export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: string }) {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -68,13 +71,13 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: stri
       {mode === "login" ? (
         <div className="rounded-xl border border-[#17120f]/14 bg-[#f8f2e7] p-4 text-sm text-[#3a3029]">
           <p className="font-semibold text-[#17120f]">Demo login</p>
-          <p className="mt-1 font-mono text-xs">demo@familyarchive.local</p>
-          <p className="font-mono text-xs">DemoFamily2026!</p>
+          <p className="mt-1 font-mono text-xs">{DEMO_EMAIL}</p>
+          <p className="font-mono text-xs">{DEMO_PASSWORD}</p>
           <button
             type="button"
             onClick={() => {
-              setEmail("demo@familyarchive.local");
-              setPassword("DemoFamily2026!");
+              setEmail(DEMO_EMAIL);
+              setPassword(DEMO_PASSWORD);
             }}
             className="mt-3 rounded-lg border border-[#17120f]/18 px-3 py-1.5 text-xs font-semibold text-[#17120f] transition hover:bg-[#fff8eb]"
           >

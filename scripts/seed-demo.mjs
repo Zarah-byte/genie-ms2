@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 
 const DEMO_DEFAULTS = {
-  email: "demo@familyarchive.local",
+  email: "demo@genie.local",
   password: "DemoFamily2026!",
   familyPin: "FAMILY-DEMO-2026",
   displayName: "Demo Family"
@@ -388,7 +388,7 @@ async function main() {
     const { error: archiveUpdateError } = await supabase
       .from("family_archives")
       .update({
-        name: "Demo Family Archive",
+        name: "Genie Demo Archive",
         description: archiveDescription,
         updated_at: new Date().toISOString()
       })
@@ -398,7 +398,7 @@ async function main() {
     const { data: insertedArchive, error: archiveInsertError } = await supabase
       .from("family_archives")
       .insert({
-        name: "Demo Family Archive",
+        name: "Genie Demo Archive",
         owner_id: userId,
         description: archiveDescription
       })

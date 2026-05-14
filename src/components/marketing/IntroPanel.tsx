@@ -39,7 +39,7 @@ export function IntroPanel({
   onExplore: () => void;
 }) {
   return (
-    <SlidePanel isOpen={isOpen} className="rounded-none border-y-0 border-l-0 max-[380px]:px-5">
+    <SlidePanel isOpen={isOpen} className="intro-panel border-y-0 border-l-0 max-[380px]:px-5">
       <div className="mx-auto flex w-full max-w-[30rem] grow flex-col lg:max-w-[390px]">
         <div className="text-center">
           <GenieLogo className="mx-auto h-[clamp(2.2rem,7vw,3.6rem)] brightness-0" />

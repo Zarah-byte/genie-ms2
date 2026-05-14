@@ -9,7 +9,7 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const DEMO_EMAIL = "demo@familyarchive.local";
+const DEMO_EMAIL = "demo@genie.local";
 const DEMO_PIN = "FAMILY-DEMO-2026";
 
 export default async function SettingsPage() {
