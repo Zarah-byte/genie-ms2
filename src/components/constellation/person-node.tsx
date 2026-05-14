@@ -35,7 +35,8 @@ export function PersonNode({
         className={cn(
           "relative overflow-hidden rounded-full border-[5px] border-[var(--node-avatar-ring)] bg-black/35 shadow-[0_0_0_1px_rgba(255,45,184,0.5),0_0_26px_rgba(255,45,184,0.4)] transition duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/85 motion-reduce:transition-none",
           sizeClass(tone),
-          active ? "scale-110 outline outline-2 outline-offset-2 outline-white/75" : "",
+          active && tone !== "you" ? "scale-110 outline outline-2 outline-offset-2 outline-white/75" : "",
+          active && tone === "you" ? "scale-105" : "",
           className
         )}
         onClick={onClick}
