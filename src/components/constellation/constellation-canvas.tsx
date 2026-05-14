@@ -1,7 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Image from "next/image";
+import { useMemo } from "react";
 import { MemoryStar } from "@/components/constellation/memory-star";
 import { PersonNode, type PersonNodeTone } from "@/components/constellation/person-node";
 import type { DemoMemory, DemoPerson, DemoRelationship } from "@/lib/mock/demoFamily";
@@ -12,13 +11,6 @@ type Selection =
   | { type: "person"; id: string }
   | { type: "memory"; id: string }
   | null;
-
-function toneInitialBg(tone: PersonNodeTone) {
-  if (tone === "you") return "bg-white text-black";
-  if (tone === "first") return "bg-[#9090ff] text-white";
-  if (tone === "second") return "bg-[#f03da9] text-white";
-  return "bg-white/70 text-black";
-}
 
 export function ConstellationCanvas({
   people,
@@ -37,8 +29,6 @@ export function ConstellationCanvas({
   onMemorySelect: (memoryId: string) => void;
   className?: string;
 }) {
-  const [hoveredPerson, setHoveredPerson] = useState<CanvasPerson | null>(null);
-
   const relationshipLines = useMemo(
     () =>
       relationships
@@ -51,8 +41,6 @@ export function ConstellationCanvas({
         .filter((line): line is RelationshipLine => Boolean(line)),
     [people, relationships]
   );
-
-  const tooltipBelow = hoveredPerson ? hoveredPerson.y < 22 : false;
 
   return (
     <div className={["relative h-full min-h-full overflow-hidden celestial-bg", className].join(" ")}>
@@ -86,8 +74,6 @@ export function ConstellationCanvas({
           active={selection?.type === "person" && selection.id === person.id}
           style={{ left: `${person.x}%`, top: `${person.y}%` }}
           onClick={() => onPersonSelect(person.id)}
-          onMouseEnter={() => setHoveredPerson(person)}
-          onMouseLeave={() => setHoveredPerson(null)}
           aria-label={`Open ${person.name}`}
         />
       ))}
@@ -102,46 +88,6 @@ export function ConstellationCanvas({
         />
       ))}
 
-      {hoveredPerson && hoveredPerson.color !== "you" && (
-        <div
-          className="pointer-events-none absolute z-50 -translate-x-1/2 transition-all duration-200"
-          style={{
-            left: `${hoveredPerson.x}%`,
-            top: `${hoveredPerson.y}%`,
-            transform: tooltipBelow
-              ? "translateX(-50%) translateY(18px)"
-              : "translateX(-50%) translateY(calc(-100% - 18px))"
-          }}
-        >
-          <div className="flex flex-col items-center gap-2">
-            {hoveredPerson.image_url ? (
-              <div className="size-16 overflow-hidden rounded-full ring-2 ring-white/40 shadow-[0_6px_32px_rgba(0,0,0,0.6)]">
-                <Image
-                  src={hoveredPerson.image_url}
-                  alt={hoveredPerson.name}
-                  width={64}
-                  height={64}
-                  className="size-full object-cover"
-                />
-              </div>
-            ) : (
-              <div
-                className={[
-                  "size-16 rounded-full ring-2 ring-white/40 shadow-[0_6px_32px_rgba(0,0,0,0.6)] flex items-center justify-center text-xl font-serif",
-                  toneInitialBg(hoveredPerson.color)
-                ].join(" ")}
-              >
-                {hoveredPerson.name.charAt(0)}
-              </div>
-            )}
-            <div className="flex flex-col items-center gap-0.5">
-              <span className="rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white/95 backdrop-blur-sm whitespace-nowrap">
-                {hoveredPerson.name}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

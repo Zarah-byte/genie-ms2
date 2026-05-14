@@ -326,8 +326,8 @@ export function ConstellationMap({
             : "-top-20 pointer-events-none opacity-0"
         ].join(" ")}
       >
-        <div className="flex items-center rounded-full border border-white/8 bg-[#0c0c0e]/85 shadow-[0_4px_28px_rgba(0,0,0,0.5)] backdrop-blur-md">
-          <span className="px-5 py-2.5 font-serif text-[0.88rem] text-[#f6f0e2]/90">
+        <div className="flex items-center rounded-full border border-white/[0.1] bg-[#0c0c0e]/85 shadow-[0_4px_28px_rgba(0,0,0,0.5)] backdrop-blur-md">
+          <span className="px-5 py-2.5 font-serif text-[0.88rem] text-[#f6f0e2]">
             Genie
           </span>
           <div className="h-5 w-px shrink-0 bg-white/10" />
@@ -335,7 +335,7 @@ export function ConstellationMap({
             type="text"
             placeholder="Ask a question..."
             value={inputValue}
-            className="w-44 bg-transparent px-4 py-2.5 text-sm text-white/80 outline-none placeholder:text-white/30 sm:w-60"
+            className="w-44 bg-transparent px-4 py-2.5 text-sm text-white/80 outline-none placeholder:text-white/22 sm:w-60"
             onClick={(e) => e.stopPropagation()}
             onPointerDown={(e) => e.stopPropagation()}
             onChange={(e) => setInputValue(e.target.value)}
@@ -343,24 +343,25 @@ export function ConstellationMap({
               if (e.key === "Enter") handleAsk(inputValue);
             }}
           />
-          <div className="flex items-center gap-1 px-1.5 py-1.5">
+          <div className="mx-1 h-4 w-px shrink-0 bg-white/[0.08]" />
+          <div className="flex items-center gap-0.5 pr-2 py-1.5 pl-0.5">
             <button
               type="button"
               aria-label="Search"
-              className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
+              className="inline-flex size-7 items-center justify-center text-white/45 transition-colors hover:text-[#a560f0]"
               onClick={(e) => { e.stopPropagation(); handleAsk(inputValue); }}
             >
-              <Search className="size-3.5" aria-hidden="true" />
+              <Search className="size-4" aria-hidden="true" />
             </button>
             <div className="relative" ref={addButtonRef}>
               <button
                 type="button"
                 aria-label="Add"
                 aria-expanded={addMenuOpen}
-                className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
+                className="inline-flex size-7 items-center justify-center text-white/45 transition-colors hover:text-white/85"
                 onClick={(e) => { e.stopPropagation(); setAddMenuOpen((v) => !v); }}
               >
-                <Plus className="size-3.5" aria-hidden="true" />
+                <Plus className="size-4" aria-hidden="true" />
               </button>
 
               {addMenuOpen && (
@@ -370,7 +371,7 @@ export function ConstellationMap({
                 >
                   <Link
                     href="/signup"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/80 transition hover:bg-white/8 hover:text-[#f6f0e2]"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/50 transition hover:bg-white/[0.06] hover:text-[#f6f0e2]/90"
                     onClick={() => setAddMenuOpen(false)}
                   >
                     <User className="size-3.5 shrink-0" aria-hidden="true" />
@@ -378,7 +379,7 @@ export function ConstellationMap({
                   </Link>
                   <Link
                     href="/signup"
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/80 transition hover:bg-white/8 hover:text-[#f6f0e2]"
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/50 transition hover:bg-white/[0.06] hover:text-[#f6f0e2]/90"
                     onClick={() => setAddMenuOpen(false)}
                   >
                     <BookOpen className="size-3.5 shrink-0" aria-hidden="true" />
@@ -390,7 +391,7 @@ export function ConstellationMap({
             <button
               type="button"
               aria-label="Menu"
-              className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition hover:bg-white/18 hover:text-white"
+              className="inline-flex size-7 items-center justify-center text-white/45 transition-colors hover:text-white/85"
               onClick={(e) => e.stopPropagation()}
             >
               <Menu className="size-4" aria-hidden="true" />
