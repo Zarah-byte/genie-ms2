@@ -6,10 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "seed:demo": "node --env-file=.env.local scripts/seed-demo.mjs",
+    "seed:demo": "node --env-file-if-exists=.env.local scripts/seed-demo.mjs",
     "optimize:svg": "svgo --config=svgo.config.mjs --folder public/placeholders"
   },
   "dependencies": {

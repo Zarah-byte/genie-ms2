@@ -1,4 +1,4 @@
-import { mockPeople, mockStories } from "@/lib/mock-data";
+import { mockPeople, mockRelationships, mockStories } from "@/lib/mock-data";
 import { createClient } from "@/lib/supabase/server";
 import type { Person, Relationship, Story } from "@/lib/types";
 
@@ -99,7 +99,7 @@ export async function getArchiveStoriesForPerson(archiveId: string | undefined, 
 }
 
 export async function getArchiveRelationships(archiveId?: string): Promise<Relationship[]> {
-  if (!archiveId) return [];
+  if (!archiveId) return mockRelationships;
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("relationships")

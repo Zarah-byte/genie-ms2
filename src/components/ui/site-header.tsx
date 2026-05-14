@@ -14,9 +14,9 @@ export function SiteHeader() {
           <GenieLogo className="h-8 brightness-0" />
         </Link>
         <nav className="hidden items-center gap-6 text-sm text-[#5c4d42] md:flex">
-          <a href="/#demo">Demo tree</a>
-          <a href="/#stories">Stories</a>
-          <a href="/#privacy">Privacy</a>
+          <Link href="/#demo">Demo tree</Link>
+          <Link href="/#stories">Stories</Link>
+          <Link href="/#privacy">Privacy</Link>
         </nav>
         <div className="flex items-center gap-2">
           <ButtonLink href="/login" variant="ghost" className="hidden sm:inline-flex hover:underline underline-offset-4">

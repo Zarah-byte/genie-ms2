@@ -99,6 +99,7 @@ type FamilyTreeDemoProps = {
   stories?: Story[];
   ctaHref?: string;
   ctaLabel?: string;
+  showCta?: boolean;
 };
 
 export function FamilyTreeDemo({
@@ -107,7 +108,8 @@ export function FamilyTreeDemo({
   relationships: relationshipsProp,
   stories: storiesProp,
   ctaHref = "/signup",
-  ctaLabel = "Start your own archive"
+  ctaLabel = "Start your own archive",
+  showCta = true
 }: FamilyTreeDemoProps) {
   const people = peopleProp?.length ? peopleProp : mockPeople;
   const relationships = relationshipsProp?.length ? relationshipsProp : mockRelationships;
@@ -120,13 +122,10 @@ export function FamilyTreeDemo({
   const flowRef = useRef<ReactFlowInstance<Node, Edge> | null>(null);
   const flowWrapperRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (!people.some((person) => person.id === selectedId)) {
-      setSelectedId(people[0]?.id ?? "");
-    }
-  }, [people, selectedId]);
-
-  const selected = people.find((person) => person.id === selectedId) ?? people[0];
+  const resolvedSelectedId = people.some((person) => person.id === selectedId)
+    ? selectedId
+    : (people[0]?.id ?? "");
+  const selected = people.find((person) => person.id === resolvedSelectedId) ?? people[0];
   const story = selected
     ? stories.find((item) => item.person_ids?.includes(selected.id)) ?? stories[0]
     : undefined;
@@ -240,7 +239,7 @@ export function FamilyTreeDemo({
 
       setClampedViewport(centered, 220);
     },
-    [containerSize.height, containerSize.width, setClampedViewport]
+    [containerSize.height, containerSize.width, positions, setClampedViewport]
   );
 
   const handleNodeClick = useCallback(
@@ -280,6 +279,7 @@ export function FamilyTreeDemo({
 
   useEffect(() => {
     if (!containerSize.width || !containerSize.height) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     resetTreeViewport(0);
   }, [containerSize.height, containerSize.width, resetTreeViewport]);
 
@@ -338,9 +338,11 @@ export function FamilyTreeDemo({
             {story?.excerpt ?? "Add stories and link them to people to make this branch feel vivid."}
           </p>
         </div>
-        <ButtonLink href={ctaHref} className="mt-6 w-full">
-          {ctaLabel}
-        </ButtonLink>
+        {showCta ? (
+          <ButtonLink href={ctaHref} className="mt-6 w-full">
+            {ctaLabel}
+          </ButtonLink>
+        ) : null}
       </Card>
     </div>
   );

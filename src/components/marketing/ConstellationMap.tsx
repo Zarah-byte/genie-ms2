@@ -44,6 +44,7 @@ export function ConstellationMap({
   const [inputValue, setInputValue] = useState("");
   const [addMenuOpen, setAddMenuOpen] = useState(false);
   const [viewport, setViewport] = useState<MapViewport>({ x: 0, y: 0, scale: 1 });
+  const [isDragging, setIsDragging] = useState(false);
   const viewportRef = useRef<MapViewport>(viewport);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -157,6 +158,8 @@ export function ConstellationMap({
       ? { x: 0, y: 0, scale: 1.04 }
       : introViewportForWidth(containerSize.width);
 
+    // Keep intro/explore camera presets aligned with responsive container changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     applyProgrammaticViewport(preset);
   }, [applyProgrammaticViewport, containerSize.width, introViewportForWidth, isExploring]);
 
@@ -193,6 +196,7 @@ export function ConstellationMap({
         const totalDy = event.clientY - dragRef.current.startY;
         if (Math.sqrt(totalDx * totalDx + totalDy * totalDy) < DRAG_THRESHOLD) return;
         dragRef.current.hasDragged = true;
+        setIsDragging(true);
         event.currentTarget.setPointerCapture(event.pointerId);
       }
 
@@ -218,6 +222,7 @@ export function ConstellationMap({
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
     dragRef.current = null;
+    setIsDragging(false);
   }, []);
 
   const handleWheel = useCallback(
@@ -298,7 +303,7 @@ export function ConstellationMap({
         onWheel={handleWheel}
         className={[
           "absolute inset-0 cursor-grab touch-none",
-          dragRef.current ? "cursor-grabbing" : ""
+          isDragging ? "cursor-grabbing" : ""
         ].join(" ")}
         style={{
           transform: `translate3d(${viewport.x}px, ${viewport.y}px, 0) scale(${viewport.scale})`,
