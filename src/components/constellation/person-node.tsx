@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export type PersonNodeTone = "you" | "first" | "second" | "distant";
@@ -23,22 +24,36 @@ function sizeClass(tone: PersonNodeTone) {
 export function PersonNode({
   tone,
   active,
+  imageUrl,
+  name,
   className,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   tone: PersonNodeTone;
   active?: boolean;
+  imageUrl?: string;
+  name?: string;
 }) {
   return (
     <button
       className={cn(
-        "absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full transition duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 motion-reduce:transition-none",
+        "absolute z-10 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full transition duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 motion-reduce:transition-none",
         sizeClass(tone),
         toneClass(tone),
         active && tone !== "you" ? "scale-125 ring-2 ring-white/65" : "",
         className
       )}
       {...props}
-    />
+    >
+      {tone === "you" && imageUrl && (
+        <Image
+          src={imageUrl}
+          alt={name ?? ""}
+          fill
+          className="object-cover"
+          sizes="64px"
+        />
+      )}
+    </button>
   );
 }

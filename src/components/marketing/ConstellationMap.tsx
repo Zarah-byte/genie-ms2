@@ -296,7 +296,7 @@ export function ConstellationMap({
           selection ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
         ].join(" ")}
       >
-        {selectedPerson ? <DemoPersonCard person={selectedPerson} /> : null}
+        {selectedPerson ? <DemoPersonCard person={selectedPerson} onClose={() => setSelection(null)} /> : null}
         {selectedMemory ? <DemoMemoryCard memory={selectedMemory} onClose={() => setSelection(null)} /> : null}
       </div>
     </div>

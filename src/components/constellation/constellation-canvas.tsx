@@ -81,6 +81,8 @@ export function ConstellationCanvas({
         <PersonNode
           key={person.id}
           tone={person.color}
+          imageUrl={person.image_url}
+          name={person.name}
           active={selection?.type === "person" && selection.id === person.id}
           style={{ left: `${person.x}%`, top: `${person.y}%` }}
           onClick={() => onPersonSelect(person.id)}
@@ -100,41 +102,43 @@ export function ConstellationCanvas({
         />
       ))}
 
-      {hoveredPerson && (
+      {hoveredPerson && hoveredPerson.color !== "you" && (
         <div
           className="pointer-events-none absolute z-50 -translate-x-1/2 transition-all duration-200"
           style={{
             left: `${hoveredPerson.x}%`,
             top: `${hoveredPerson.y}%`,
             transform: tooltipBelow
-              ? "translateX(-50%) translateY(14px)"
-              : "translateX(-50%) translateY(calc(-100% - 14px))"
+              ? "translateX(-50%) translateY(18px)"
+              : "translateX(-50%) translateY(calc(-100% - 18px))"
           }}
         >
-          <div className="flex flex-col items-center gap-1.5">
+          <div className="flex flex-col items-center gap-2">
             {hoveredPerson.image_url ? (
-              <div className="size-14 overflow-hidden rounded-full ring-2 ring-white/30 shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+              <div className="size-16 overflow-hidden rounded-full ring-2 ring-white/40 shadow-[0_6px_32px_rgba(0,0,0,0.6)]">
                 <Image
                   src={hoveredPerson.image_url}
                   alt={hoveredPerson.name}
-                  width={56}
-                  height={56}
+                  width={64}
+                  height={64}
                   className="size-full object-cover"
                 />
               </div>
             ) : (
               <div
                 className={[
-                  "size-14 rounded-full ring-2 ring-white/30 shadow-[0_4px_24px_rgba(0,0,0,0.5)] flex items-center justify-center text-lg font-serif",
+                  "size-16 rounded-full ring-2 ring-white/40 shadow-[0_6px_32px_rgba(0,0,0,0.6)] flex items-center justify-center text-xl font-serif",
                   toneInitialBg(hoveredPerson.color)
                 ].join(" ")}
               >
                 {hoveredPerson.name.charAt(0)}
               </div>
             )}
-            <span className="rounded-full bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white/90 backdrop-blur-sm whitespace-nowrap">
-              {hoveredPerson.name}
-            </span>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white/95 backdrop-blur-sm whitespace-nowrap">
+                {hoveredPerson.name}
+              </span>
+            </div>
           </div>
         </div>
       )}
