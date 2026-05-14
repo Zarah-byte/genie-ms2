@@ -27,7 +27,12 @@ export function PersonNode({
   imageUrl,
   name,
   className,
-  ...props
+  style,
+  onClick,
+  onPointerDown,
+  tabIndex,
+  "aria-label": ariaLabel,
+  ...rest
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   tone: PersonNodeTone;
   active?: boolean;
@@ -35,27 +40,42 @@ export function PersonNode({
   name?: string;
 }) {
   return (
-    <button
-      className={cn(
-        "absolute z-10 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full transition duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 motion-reduce:transition-none",
-        sizeClass(tone),
-        toneClass(tone),
-        active && tone !== "you" ? "scale-125 ring-2 ring-white/65" : "",
-        className
-      )}
-      {...props}
+    <div
+      className="absolute z-10 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
+      style={style}
     >
-      {imageUrl ? (
-        <Image
-          src={imageUrl}
-          alt={name ?? ""}
-          fill
-          className="object-cover"
-          sizes="48px"
-        />
-      ) : (
-        <span className="text-xs font-semibold text-white">{name?.charAt(0)}</span>
+      <button
+        className={cn(
+          "relative overflow-hidden rounded-full transition duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 motion-reduce:transition-none",
+          sizeClass(tone),
+          toneClass(tone),
+          active && tone !== "you" ? "scale-110 outline outline-2 outline-offset-2 outline-white/70" : "",
+          active && tone === "you" ? "scale-105" : "",
+          className
+        )}
+        onClick={onClick}
+        onPointerDown={onPointerDown}
+        tabIndex={tabIndex}
+        aria-label={ariaLabel}
+        {...rest}
+      >
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={name ?? ""}
+            fill
+            className="object-cover"
+            sizes="48px"
+          />
+        ) : (
+          <span className="text-xs font-semibold text-white">{name?.charAt(0)}</span>
+        )}
+      </button>
+      {tone !== "you" && name && (
+        <span className="text-[0.68rem] font-medium text-white/55 whitespace-nowrap select-none pointer-events-none">
+          {name}
+        </span>
       )}
-    </button>
+    </div>
   );
 }

@@ -70,9 +70,15 @@ export async function createPerson(formData: FormData) {
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message);
 
   const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
   const { data: ownedArchive } = await supabase
     .from("family_archives")
     .select("id")
+    .eq("owner_id", user.id)
     .limit(1)
     .single();
 
@@ -82,6 +88,7 @@ export async function createPerson(formData: FormData) {
     archive_id: ownedArchive.id,
     full_name: parsed.data.full_name,
     birth_date: parsed.data.birth_date || null,
+    death_date: parsed.data.death_date || null,
     birth_place: parsed.data.birth_place || null,
     notes: parsed.data.notes || null
   });
@@ -96,9 +103,15 @@ export async function createStory(formData: FormData) {
   if (!parsed.success) throw new Error(parsed.error.issues[0]?.message);
 
   const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
   const { data: ownedArchive } = await supabase
     .from("family_archives")
     .select("id")
+    .eq("owner_id", user.id)
     .limit(1)
     .single();
 

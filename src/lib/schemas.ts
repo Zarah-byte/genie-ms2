@@ -16,6 +16,7 @@ export const archiveSchema = z.object({
 export const personSchema = z.object({
   full_name: z.string().min(1, "Add at least a name or remembered name."),
   birth_date: z.string().optional(),
+  death_date: z.string().optional(),
   birth_place: z.string().optional(),
   notes: z.string().optional()
 });

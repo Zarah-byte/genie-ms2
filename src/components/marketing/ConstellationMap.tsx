@@ -261,7 +261,7 @@ export function ConstellationMap({
   return (
     <div
       className={[
-        "relative h-full min-h-full overflow-hidden bg-[#020202] transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] motion-reduce:transition-none"
+        "relative h-full min-h-full overflow-hidden bg-[#040406] transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] motion-reduce:transition-none"
       ].join(" ")}
     >
       <div
@@ -370,7 +370,7 @@ export function ConstellationMap({
                   className="absolute right-0 top-10 z-50 flex w-44 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0e]/90 py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.6)] backdrop-blur-md"
                 >
                   <Link
-                    href="/signup"
+                    href="/archive/people/new"
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/50 transition hover:bg-white/[0.06] hover:text-[#f6f0e2]/90"
                     onClick={() => setAddMenuOpen(false)}
                   >
@@ -378,7 +378,7 @@ export function ConstellationMap({
                     Add a person
                   </Link>
                   <Link
-                    href="/signup"
+                    href="/archive/stories/new"
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#f6f0e2]/50 transition hover:bg-white/[0.06] hover:text-[#f6f0e2]/90"
                     onClick={() => setAddMenuOpen(false)}
                   >
@@ -438,7 +438,7 @@ export function ConstellationMap({
       {/* Person / memory detail cards */}
       <div
         className={[
-          "absolute z-30 transition-all duration-300 motion-reduce:transition-none",
+          "fixed z-[60] max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl transition-all duration-300 motion-reduce:transition-none",
           isExploring
             ? "right-[max(1rem,env(safe-area-inset-right))] top-[calc(env(safe-area-inset-top)+3.75rem)] md:right-8 md:top-20"
             : "bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] right-[max(1rem,env(safe-area-inset-right))] md:bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] md:right-8",
