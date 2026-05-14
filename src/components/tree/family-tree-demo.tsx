@@ -26,6 +26,8 @@ import { mockPeople, mockRelationships, mockStories } from "@/lib/mock-data";
 import { Person, Relationship, Story } from "@/lib/types";
 
 function PersonNode({ data }: { data: { person: Person; selected: boolean } }) {
+  const initials = data.person.full_name.trim().charAt(0).toUpperCase();
+
   return (
     <div
       className={[
@@ -34,10 +36,20 @@ function PersonNode({ data }: { data: { person: Person; selected: boolean } }) {
       ].join(" ")}
     >
       <div className="flex items-center gap-3">
-        <div className="relative size-11 overflow-hidden rounded-full bg-[#eadcc9]">
+        <div className="relative size-11 overflow-hidden rounded-full border-[4px] border-[var(--node-avatar-ring)] bg-[#1b1618] shadow-[0_0_0_1px_rgba(255,45,184,0.35),0_0_18px_rgba(255,45,184,0.25)]">
           {data.person.image_url ? (
-            <Image src={data.person.image_url} alt="" fill className="object-cover" />
-          ) : null}
+            <Image
+              src={data.person.image_url}
+              alt={data.person.full_name}
+              fill
+              className="object-cover"
+              sizes="44px"
+            />
+          ) : (
+            <span className="inline-flex h-full w-full items-center justify-center text-sm font-semibold text-[#fff5fd]">
+              {initials}
+            </span>
+          )}
         </div>
         <div>
           <p className="text-sm font-semibold text-[#241710]">{data.person.full_name}</p>
