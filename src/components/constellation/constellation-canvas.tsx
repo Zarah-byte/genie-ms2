@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { MemoryStar } from "@/components/constellation/memory-star";
 import { PersonNode, type PersonNodeTone } from "@/components/constellation/person-node";
 import type { DemoMemory, DemoPerson, DemoRelationship } from "@/lib/mock/demoFamily";
@@ -29,6 +29,8 @@ export function ConstellationCanvas({
   onMemorySelect: (memoryId: string) => void;
   className?: string;
 }) {
+  const youNode = useMemo(() => people.find((person) => person.color === "you"), [people]);
+
   const relationshipLines = useMemo(
     () =>
       relationships
@@ -42,17 +44,53 @@ export function ConstellationCanvas({
     [people, relationships]
   );
 
+  const glowX = youNode?.x ?? 50;
+  const glowY = youNode?.y ?? 44;
+
+  const lineToneClass = (line: RelationshipLine) => {
+    if (line.from.id === youNode?.id) {
+      return line.to.color === "first"
+        ? "constellation-line-first"
+        : line.to.color === "second"
+          ? "constellation-line-second"
+          : "constellation-line";
+    }
+
+    if (line.to.id === youNode?.id) {
+      return line.from.color === "first"
+        ? "constellation-line-first"
+        : line.from.color === "second"
+          ? "constellation-line-second"
+          : "constellation-line";
+    }
+
+    return "constellation-line-ambient";
+  };
+
   return (
-    <div className={["relative h-full min-h-full overflow-hidden celestial-bg", className].join(" ")}>
+    <div
+      className={["relative h-full min-h-full overflow-hidden celestial-bg", className].join(" ")}
+      style={
+        {
+          "--constellation-glow-x": `${glowX}%`,
+          "--constellation-glow-y": `${glowY}%`
+        } as CSSProperties
+      }
+    >
+      <div
+        aria-hidden="true"
+        className="absolute pointer-events-none"
+        style={{
+          left: `${glowX}%`,
+          top: `${glowY}%`,
+          width: "68vmax",
+          height: "68vmax",
+          transform: "translate(-50%, -50%)",
+          background:
+            "radial-gradient(circle, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.24) 18%, rgba(255,255,255,0.1) 42%, rgba(255,255,255,0.03) 60%, rgba(255,255,255,0) 74%)",
+        }}
+      />
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
-        <defs>
-          <radialGradient id="constellationGlow">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
-            <stop offset="40%" stopColor="#ffffff" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="50%" cy="44%" r="22%" fill="url(#constellationGlow)" />
         {relationshipLines.map((line) => (
           <line
             key={line.id}
@@ -60,7 +98,7 @@ export function ConstellationCanvas({
             y1={`${line.from.y}%`}
             x2={`${line.to.x}%`}
             y2={`${line.to.y}%`}
-            className="constellation-line"
+            className={lineToneClass(line)}
           />
         ))}
       </svg>

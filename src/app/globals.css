@@ -98,7 +98,11 @@ select {
 .celestial-bg {
   background-color: #040406;
   background-image:
-    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.11), transparent 36rem);
+    radial-gradient(
+      circle at var(--constellation-glow-x, 50%) var(--constellation-glow-y, 44%),
+      rgba(255, 255, 255, 0.08),
+      transparent 36rem
+    );
 }
 
 .paper-panel {
@@ -260,6 +264,24 @@ select {
 
 .constellation-line {
   stroke: rgba(255, 255, 255, 0.42);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+}
+
+.constellation-line-first {
+  stroke: rgba(165, 96, 240, 0.58);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+}
+
+.constellation-line-second {
+  stroke: rgba(240, 61, 169, 0.55);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+}
+
+.constellation-line-ambient {
+  stroke: rgba(255, 255, 255, 0.22);
   stroke-width: 1;
   stroke-dasharray: 3 6;
 }
