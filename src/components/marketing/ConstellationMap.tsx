@@ -8,7 +8,7 @@ import { DemoAskPanel, type AskState } from "@/components/marketing/DemoAskPanel
 import { DemoLegend } from "@/components/marketing/DemoLegend";
 import { DemoMemoryCard } from "@/components/marketing/DemoMemoryCard";
 import { DemoPersonCard } from "@/components/marketing/DemoPersonCard";
-import { PrimaryButtonLink } from "@/components/ui/primary-button";
+import { PrimaryButton, PrimaryButtonLink } from "@/components/ui/primary-button";
 import {
   clampScale,
   clampViewport,
@@ -47,7 +47,14 @@ export function ConstellationMap({
   const viewportRef = useRef<MapViewport>(viewport);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const dragRef = useRef<{ pointerId: number; x: number; y: number } | null>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    x: number;
+    y: number;
+    hasDragged: boolean;
+  } | null>(null);
   const addButtonRef = useRef<HTMLDivElement | null>(null);
   const addMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -163,17 +170,33 @@ export function ConstellationMap({
     onIntro();
   }, [applyProgrammaticViewport, containerSize.width, introViewportForWidth, onIntro]);
 
+  const DRAG_THRESHOLD = 5;
+
   const handlePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
-    dragRef.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
-    event.currentTarget.setPointerCapture(event.pointerId);
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      x: event.clientX,
+      y: event.clientY,
+      hasDragged: false,
+    };
   }, []);
 
   const handlePointerMove = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
       if (!dragRef.current || dragRef.current.pointerId !== event.pointerId) return;
-      event.preventDefault();
 
+      if (!dragRef.current.hasDragged) {
+        const totalDx = event.clientX - dragRef.current.startX;
+        const totalDy = event.clientY - dragRef.current.startY;
+        if (Math.sqrt(totalDx * totalDx + totalDy * totalDy) < DRAG_THRESHOLD) return;
+        dragRef.current.hasDragged = true;
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }
+
+      event.preventDefault();
       const dx = event.clientX - dragRef.current.x;
       const dy = event.clientY - dragRef.current.y;
       dragRef.current = { ...dragRef.current, x: event.clientX, y: event.clientY };
@@ -191,7 +214,9 @@ export function ConstellationMap({
 
   const handlePointerUp = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (!dragRef.current || dragRef.current.pointerId !== event.pointerId) return;
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (dragRef.current.hasDragged) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
     dragRef.current = null;
   }, []);
 
@@ -308,14 +333,14 @@ export function ConstellationMap({
       </button>
 
       {isExploring ? (
-        <button
-          type="button"
+        <PrimaryButton
+          variant="cream"
           onClick={handleIntro}
-          className="absolute left-[max(1rem,env(safe-area-inset-left))] top-[max(1rem,env(safe-area-inset-top))] z-30 inline-flex h-10 items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 text-xs font-semibold text-[#f5eedc] backdrop-blur transition hover:bg-white/15 motion-reduce:transition-none"
+          className="absolute left-[max(1rem,env(safe-area-inset-left))] top-[max(1rem,env(safe-area-inset-top))] z-30 shadow-[0_4px_16px_rgba(0,0,0,0.3)]"
         >
-          <ArrowLeft className="size-3.5" aria-hidden="true" />
+          <ArrowLeft className="size-4" aria-hidden="true" />
           Intro
-        </button>
+        </PrimaryButton>
       ) : null}
 
       <div
