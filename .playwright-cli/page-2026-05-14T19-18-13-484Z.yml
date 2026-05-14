@@ -1,0 +1,102 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - region "Family archive demo" [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e6]:
+          - img [ref=e7]
+          - button "Open You" [ref=e18]:
+            - img "You" [ref=e19]
+          - generic [ref=e20]:
+            - button "Open Amina Rahman" [ref=e21]:
+              - img "Amina Rahman" [ref=e22]
+            - generic: Amina Rahman
+          - generic [ref=e23]:
+            - button "Open Samir Yusuf" [ref=e24]:
+              - img "Samir Yusuf" [ref=e25]
+            - generic: Samir Yusuf
+          - generic [ref=e26]:
+            - button "Open Leila Rahman" [ref=e27]:
+              - img "Leila Rahman" [ref=e28]
+            - generic: Leila Rahman
+          - generic [ref=e29]:
+            - button "Open Arman Yusuf" [ref=e30]:
+              - img "Arman Yusuf" [ref=e31]
+            - generic: Arman Yusuf
+          - generic [ref=e32]:
+            - button "Open Idris Noor" [ref=e33]:
+              - img "Idris Noor" [ref=e34]
+            - generic: Idris Noor
+          - 'button "Open memory: The mango pickle recipe" [ref=e35]':
+            - img [ref=e36]
+          - 'button "Open memory: A letter from the port" [ref=e38]':
+            - img [ref=e39]
+          - 'button "Open memory: Porch photograph" [ref=e41]':
+            - img [ref=e42]
+          - 'button "Open memory: Voice note after dinner" [ref=e44]':
+            - img [ref=e45]
+          - 'button "Open memory: Unknown street" [ref=e47]':
+            - img [ref=e48]
+        - button "Explore" [ref=e50]:
+          - text: Explore
+          - img [ref=e51]
+        - generic:
+          - generic:
+            - generic: Genie
+            - textbox "Ask a question..."
+            - generic:
+              - button "Search":
+                - img
+              - generic:
+                - button "Add":
+                  - img
+              - button "Menu":
+                - img
+        - list [ref=e56]:
+          - listitem [ref=e57]:
+            - generic [ref=e59]: you
+          - listitem [ref=e60]:
+            - generic [ref=e62]: first connection
+          - listitem [ref=e63]:
+            - generic [ref=e65]: second connection
+          - listitem [ref=e66]:
+            - generic [ref=e67]: ✦
+            - generic [ref=e68]: memories
+      - complementary [ref=e69]:
+        - generic [ref=e70]:
+          - generic [ref=e71]:
+            - img "Genie" [ref=e72]
+            - paragraph [ref=e73]: A private family archive for preserving lineage, memories, and the stories that live between generations.
+          - generic [ref=e74]:
+            - heading "How it Works" [level=1] [ref=e75]
+            - list [ref=e76]:
+              - listitem [ref=e77]:
+                - generic [ref=e78]: "01."
+                - generic [ref=e79]:
+                  - generic [ref=e80]: Add your people
+                  - generic [ref=e81]: Create profiles with names, dates, places, and photographs for every member of your family.
+              - listitem [ref=e82]:
+                - generic [ref=e83]: "02."
+                - generic [ref=e84]:
+                  - generic [ref=e85]: Map the relationships
+                  - generic [ref=e86]: Connect parents, children, siblings, and spouses to build your family tree.
+              - listitem [ref=e87]:
+                - generic [ref=e88]: "03."
+                - generic [ref=e89]:
+                  - generic [ref=e90]: Attach memories
+                  - generic [ref=e91]: Upload photographs, letters, documents, recipes, and recordings.
+              - listitem [ref=e92]:
+                - generic [ref=e93]: "04."
+                - generic [ref=e94]:
+                  - generic [ref=e95]: Write the stories
+                  - generic [ref=e96]: "Add the context a certificate never could: places, language, rituals, and remembered fragments."
+              - listitem [ref=e97]:
+                - generic [ref=e98]: "05."
+                - generic [ref=e99]:
+                  - generic [ref=e100]: Share with family
+                  - generic [ref=e101]: Invite relatives to view, contribute, and preserve what they know.
+          - link "Get Started" [ref=e103] [cursor=pointer]:
+            - /url: /signup
+            - text: Get Started
+            - img [ref=e104]
+  - button "Open Next.js Dev Tools" [ref=e111] [cursor=pointer]:
+    - img [ref=e112]
