@@ -107,7 +107,10 @@ export async function createStory(formData: FormData) {
   const { error } = await supabase.from("stories").insert({
     archive_id: ownedArchive.id,
     title: parsed.data.title,
-    excerpt: parsed.data.excerpt,
+    excerpt:
+      parsed.data.excerpt?.trim() ||
+      parsed.data.body?.trim().slice(0, 180) ||
+      "A remembered moment from the family archive.",
     body: parsed.data.body || null,
     location: parsed.data.location || null,
     date_text: parsed.data.date_text || null

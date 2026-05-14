@@ -7,10 +7,11 @@ export default function SignupPage() {
     <AuthLayout
       title="Begin your family archive."
       description="Create the owner account for your private family archive."
+      backdrop="demo-family"
       footer={
         <>
           Already have an account?{" "}
-          <Link className="font-semibold text-[#17120f]" href="/login">
+          <Link className="font-semibold text-[#17120f] hover:underline underline-offset-2" href="/login">
             Log in
           </Link>
         </>

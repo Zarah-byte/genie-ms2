@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Leaf } from "lucide-react";
+import { GenieLogo } from "@/components/ui/genie-logo";
 import { ButtonLink } from "@/components/ui/button";
 
 export function SiteHeader() {
@@ -10,7 +11,7 @@ export function SiteHeader() {
           <span className="grid size-9 place-items-center rounded-full border border-[#cdbba6] bg-[#fffaf1]">
             <Leaf className="size-4 text-[#8b4a2f]" aria-hidden="true" />
           </span>
-          Genie
+          <GenieLogo className="h-8 brightness-0" />
         </Link>
         <nav className="hidden items-center gap-6 text-sm text-[#5c4d42] md:flex">
           <a href="/#demo">Demo tree</a>
@@ -18,7 +19,7 @@ export function SiteHeader() {
           <a href="/#privacy">Privacy</a>
         </nav>
         <div className="flex items-center gap-2">
-          <ButtonLink href="/login" variant="ghost" className="hidden sm:inline-flex">
+          <ButtonLink href="/login" variant="ghost" className="hidden sm:inline-flex hover:underline underline-offset-4">
             Log in
           </ButtonLink>
           <ButtonLink href="/signup">Start archive</ButtonLink>

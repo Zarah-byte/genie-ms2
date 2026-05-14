@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Plus, Settings, Sparkles, Users } from "lucide-react";
 import { ConstellationBackdrop } from "@/components/constellation/constellation-backdrop";
 import { FamilyLegend } from "@/components/constellation/family-legend";
+import { GenieLogo } from "@/components/ui/genie-logo";
 import { PrimaryButtonLink } from "@/components/ui/primary-button";
 
 const navItems = [
@@ -26,8 +27,8 @@ export function ArchiveShell({
     <div className="relative min-h-screen overflow-hidden bg-[#040406] text-[#f6f0e2]">
       <ConstellationBackdrop />
       <header className="safe-px absolute left-0 right-0 top-0 z-30 flex items-center justify-between px-5 py-[max(1rem,var(--safe-top))] sm:px-7">
-        <Link href="/archive" className="font-serif text-3xl text-[#f6f0e2] sm:text-4xl">
-          Genie
+        <Link href="/archive" className="inline-flex">
+          <GenieLogo className="h-10 brightness-0 invert" />
         </Link>
         <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => (

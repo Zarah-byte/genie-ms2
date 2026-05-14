@@ -95,6 +95,26 @@ select {
   line-height: 1.35;
 }
 
+@keyframes input-invalid-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-1px);
+  }
+}
+
+.input-invalid-shake {
+  animation: input-invalid-shake 220ms ease-in-out;
+}
+
 .pill-button {
   min-height: 2.8rem;
   border-radius: 999px;

@@ -1,18 +1,32 @@
 import { ArchiveShell } from "@/components/archive/archive-shell";
+import { InvitePanel } from "@/components/panels/invite-panel";
 import { Card } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
 export default function SettingsPage() {
   return (
-    <ArchiveShell title="Settings" description="Owner-only controls for archive name, invite PINs, and family member access.">
-      <Card className="p-6">
-        <h2 className="font-serif text-3xl font-semibold">Invite access</h2>
-        <p className="mt-3 leading-7 text-[#5c4d42]">
-          PIN viewers should remain read-only. Rotate invite codes here when needed and keep
-          owner authentication separate from family viewing.
-        </p>
-      </Card>
+    <ArchiveShell
+      title="Settings"
+      description="Archive name, privacy, family PIN, contributors, export, and archive controls."
+    >
+      <div className="grid gap-5">
+        <Card className="bg-[#f7f1e5] p-6">
+          <h2 className="font-serif text-3xl text-[#17120f]">Archive details</h2>
+          <div className="archive-divider mt-4 pt-4 text-sm text-[#3a3029]">
+            <p>Privacy: Private archive</p>
+            <p className="mt-2">Contributors: Owner, editors, and invited viewers</p>
+            <p className="mt-2">Export: Generate a family archive package</p>
+          </div>
+        </Card>
+        <InvitePanel pin="GENI-4721" />
+        <Card className="bg-[#f7f1e5] p-6">
+          <h3 className="font-serif text-2xl text-[#17120f]">Delete archive</h3>
+          <p className="mt-2 text-sm leading-6 text-[#3a3029]/80">
+            This action permanently removes people, memories, and relationships from this archive.
+          </p>
+        </Card>
+      </div>
     </ArchiveShell>
   );
 }

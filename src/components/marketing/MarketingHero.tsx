@@ -10,7 +10,7 @@ export function MarketingHero() {
   return (
     <main className="h-[100svh] overflow-hidden bg-[#020202] text-[#f5eedc]">
       <section
-        aria-label="Genie family archive demo"
+        aria-label="Family archive demo"
         className="relative h-full bg-[#020202]"
       >
         <ConstellationMap

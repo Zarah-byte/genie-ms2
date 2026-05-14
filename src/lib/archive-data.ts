@@ -39,3 +39,42 @@ export async function getArchiveStories(archiveId?: string): Promise<Story[]> {
   if (error) return [];
   return data ?? [];
 }
+
+export async function getArchivePersonById(archiveId: string | undefined, id: string): Promise<Person | null> {
+  if (!archiveId) {
+    return mockPeople.find((person) => person.id === id) ?? null;
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("people")
+    .select("*")
+    .eq("archive_id", archiveId)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return null;
+  return data ?? null;
+}
+
+export async function getArchiveStoryById(archiveId: string | undefined, id: string): Promise<Story | null> {
+  if (!archiveId) {
+    return mockStories.find((story) => story.id === id) ?? null;
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("stories")
+    .select("*")
+    .eq("archive_id", archiveId)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return null;
+  return data ?? null;
+}
+
+export async function getArchiveStoriesForPerson(archiveId: string | undefined, personId: string): Promise<Story[]> {
+  const stories = await getArchiveStories(archiveId);
+  return stories.filter((story) => story.person_ids?.includes(personId));
+}

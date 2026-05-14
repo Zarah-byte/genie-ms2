@@ -6,14 +6,14 @@ type Variant = "cream" | "ink" | "ghost";
 
 function variantClass(variant: Variant) {
   if (variant === "ink") {
-    return "bg-[#1a1714] text-[#f6f0e2] hover:bg-[#0f0d0b] focus-visible:ring-[#1a1714]/35";
+    return "bg-[#1a1714] !text-[#f6f0e2] hover:bg-[#0f0d0b] focus-visible:ring-[#1a1714]/35 [&_svg]:!text-[#f6f0e2]";
   }
 
   if (variant === "ghost") {
     return "border border-white/20 bg-transparent text-[#f6f0e2] hover:bg-white/10 focus-visible:ring-white/30";
   }
 
-  return "bg-[#f6f0e2] text-[#13100d] hover:bg-[#fff7e8] focus-visible:ring-[#f6f0e2]/30";
+  return "bg-[#f6f0e2] !text-[#111111] hover:bg-[#fff7e8] focus-visible:ring-[#f6f0e2]/30 [&_svg]:!text-[#111111]";
 }
 
 export function PrimaryButton({

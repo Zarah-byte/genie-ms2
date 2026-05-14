@@ -6,8 +6,8 @@ export const dynamic = "force-dynamic";
 export default function TreePage() {
   return (
     <ArchiveShell
-      title="Family tree"
-      description="A visual map of relationships. This MVP view is wired with the same tree component as the public demo and ready for archive data."
+      title="Family constellation"
+      description="Click a person node or memory star to open its archival profile."
     >
       <ArchiveTree />
     </ArchiveShell>

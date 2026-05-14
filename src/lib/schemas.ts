@@ -22,7 +22,7 @@ export const personSchema = z.object({
 
 export const storySchema = z.object({
   title: z.string().min(2, "Add a story title."),
-  excerpt: z.string().min(2, "Add a short description."),
+  excerpt: z.string().optional(),
   body: z.string().optional(),
   location: z.string().optional(),
   date_text: z.string().optional()

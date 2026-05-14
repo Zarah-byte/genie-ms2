@@ -13,10 +13,10 @@ export function EmptyState({
   action: string;
 }) {
   return (
-    <Card className="archive-paper p-8 text-center">
-      <h2 className="font-serif text-3xl font-semibold">{title}</h2>
-      <p className="mx-auto mt-3 max-w-xl text-[#78695e]">{description}</p>
-      <ButtonLink href={href} className="mt-6">
+    <Card className="bg-[#f7f1e5] p-8 text-center">
+      <h2 className="font-serif text-3xl text-[#17120f]">{title}</h2>
+      <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[#3a3029]/80">{description}</p>
+      <ButtonLink href={href} className="mt-6" variant="primary">
         {action}
       </ButtonLink>
     </Card>

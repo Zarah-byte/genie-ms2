@@ -60,7 +60,7 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: stri
         </p>
       ) : null}
       <Button type="submit" disabled={loading}>
-        {loading ? "Working..." : mode === "signup" ? "Create account" : "Log in"}
+        {loading ? "Working..." : mode === "signup" ? "Continue" : "Continue"}
       </Button>
     </form>
   );
